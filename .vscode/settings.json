@@ -20,11 +20,11 @@
     "chat.instructionsFilesLocations": {
         ".github/instructions": true
     },
-    "chat.promptFiles": false,
     "[toml]": {
         "editor.defaultFormatter": "tamasfe.even-better-toml"
     },
     "[yaml]": {
         "editor.defaultFormatter": "redhat.vscode-yaml"
     },
+    "css.lint.unknownAtRules": "ignore",
 }
