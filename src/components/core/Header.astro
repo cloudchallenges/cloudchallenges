@@ -1,0 +1,108 @@
+---
+import { Icon } from "astro-icon/components";
+import { navItems } from "@data/config";
+import Button from "@/components/ui/Button.astro";
+import Logo from "@/assets/cloud-white.svg";
+
+const pathname = new URL(Astro.request.url).pathname;
+---
+
+<header class="sticky top-0 z-50 flex items-center justify-center py-4">
+    <!-- Desktop menu -->
+    <div
+        class="border-border bg-content supports-backdrop-filter:bg-content/60 rounded-radius hidden h-16 w-fit border backdrop-blur-2xl md:flex"
+    >
+        <div
+            class="container flex h-full flex-row items-center justify-between gap-64 px-3.5"
+        >
+            <div
+                class="text-text-default flex h-full w-full items-center justify-center text-xl font-bold"
+            >
+                <a href="/">
+                    <Icon name="cloud" class="size-8 text-text-default" />
+                </a>
+            </div>
+
+            <nav class="flex h-full w-full items-center justify-evenly gap-2">
+                {
+                    navItems.map((item) => {
+                        const isActive =
+                            pathname === item.href ||
+                            (item.href !== "/" &&
+                                pathname.startsWith(item.href));
+                        return (
+                            <Button
+                                href={item.href}
+                                target={item.blank ? "_blank" : "_self"}
+                                rel={
+                                    item.blank
+                                        ? "noopener noreferrer"
+                                        : undefined
+                                }
+                                variant={item.special ? "default" : "ghost"}
+                                size="default"
+                                class={`text-sm font-bold whitespace-nowrap ${
+                                    isActive ? "text-accent" : ""
+                                }`}
+                            >
+                                {item.label}
+                            </Button>
+                        );
+                    })
+                }
+            </nav>
+        </div>
+    </div>
+
+    <!-- Mobile menu -->
+    <div id="mobile-menu-container" class="relative mx-4 w-full md:hidden">
+        <div
+            class="border-border bg-content supports-backdrop-filter:bg-content/60 rounded-radius flex h-16 items-center justify-between border px-4 backdrop-blur-2xl"
+        >
+            <div
+                class="text-text-default flex h-full items-center justify-center text-lg font-bold"
+            >
+                <Icon name="cloud" class="size-8 text-text-default" />
+            </div>
+            <button id="mobile-menu-btn" class="text-text-default">
+                <Icon id="menu-icon" name="menu" class="size-6" />
+            </button>
+        </div>
+
+        <nav
+            id="mobile-menu"
+            class="rounded-radius border-border bg-content/80 supports-backdrop-filter:bg-content/50 absolute top-20 right-0 left-0 z-40 hidden max-h-[calc(100vh-7rem)] flex-col items-center justify-center gap-4 overflow-y-auto border p-4 backdrop-blur-2xl"
+        >
+            {
+                navItems.map((item) => {
+                    const isActive =
+                        pathname === item.href ||
+                        (item.href !== "/" && pathname.startsWith(item.href));
+                    return (
+                        <a
+                            href={item.href}
+                            target={item.blank ? "_blank" : "_self"}
+                            class={`py-2 text-sm font-bold ${
+                                isActive ? "text-accent" : "text-text-subtle"
+                            }`}
+                        >
+                            {item.label}
+                        </a>
+                    );
+                })
+            }
+        </nav>
+    </div>
+</header>
+
+<script>
+    document.addEventListener("astro:page-load", () => {
+        const menuBtn = document.getElementById("mobile-menu-btn");
+        const mobileMenu = document.getElementById("mobile-menu");
+
+        menuBtn?.addEventListener("click", () => {
+            mobileMenu?.classList.toggle("hidden");
+            mobileMenu?.classList.toggle("flex");
+        });
+    });
+</script>
