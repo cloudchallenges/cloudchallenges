@@ -16,6 +16,9 @@
             ],
             "@posts/*": [
                 "./content/posts/*"
+            ],
+            "@data/*": [
+                "./data/*"
             ]
         }
     }
