@@ -1,1 +1,299 @@
 @import "tailwindcss";
+
+@layer base {
+    :root {
+        /* Neutrals */
+        --background: hsl(220, 15%, 8%);
+        --content: hsl(220, 14%, 11%);
+        --elevated: hsl(220, 13%, 16%);
+        --border: hsl(220, 12%, 22%);
+        --text-default: hsl(220, 13%, 93%);
+        --text-subtle: hsl(220, 9%, 70%);
+        --text-faint: hsl(220, 8%, 50%);
+
+        /* Accents & Statuses */
+        --red: hsl(0, 65%, 62%);
+        --orange: hsl(30, 70%, 60%);
+        --yellow: hsl(45, 75%, 65%);
+        --green: hsl(130, 40%, 55%);
+        --teal: hsl(165, 45%, 53%);
+        --cyan: hsl(185, 50%, 60%);
+        --blue: hsl(210, 70%, 63%);
+        --purple: hsl(270, 60%, 65%);
+        --pink: hsl(330, 65%, 67%);
+
+        --accent: var(--blue);
+
+        --radius: 0.5rem;
+
+        --astro-code-background: var(--content);
+        --astro-code-foreground: var(--text-default);
+        --astro-code-token-constant: var(--pink);
+        --astro-code-token-string: var(--green);
+        --astro-code-token-comment: var(--text-faint);
+        --astro-code-token-keyword: var(--pink);
+        --astro-code-token-parameter: var(--red);
+        --astro-code-token-function: var(--blue);
+        --astro-code-token-string-expression: var(--green);
+        --astro-code-token-punctuation: var(--red);
+        --astro-code-token-link: var(--green);
+    }
+}
+
+@theme {
+    --color-*: initial;
+
+    --color-background: var(--background);
+    --color-content: var(--content);
+    --color-elevated: var(--elevated);
+    --color-border: var(--border);
+    --color-text-default: var(--text-default);
+    --color-text-subtle: var(--text-subtle);
+    --color-text-faint: var(--text-faint);
+    --color-red: var(--red);
+    --color-orange: var(--orange);
+    --color-yellow: var(--yellow);
+    --color-green: var(--green);
+    --color-cyan: var(--cyan);
+    --color-blue: var(--blue);
+    --color-purple: var(--purple);
+    --color-pink: var(--pink);
+    --color-accent: var(--accent);
+
+    --radius-radius: var(--radius);
+    --radius-lg: calc(var(--radius) + 3px);
+    --radius-sm: calc(var(--radius) - 3px);
+
+    --font-display: "Karla Variable", sans-serif;
+    --font-mono: "Source Code Pro Variable", monospace;
+    --font-body: "Karla Variable", sans-serif;
+}
+
+@layer base {
+    * {
+        @apply font-body box-border scroll-smooth;
+    }
+
+    body {
+        @apply bg-background text-text-default antialiased;
+    }
+
+    /* Container system */
+    .container {
+        @apply mx-auto w-full max-w-7xl md:px-8 lg:px-12;
+    }
+
+    /* Section spacing */
+    section {
+        @apply py-4;
+    }
+
+    /* Typography enhancements */
+    h1 {
+        @apply text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl;
+    }
+
+    h2 {
+        @apply text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl;
+    }
+
+    h3 {
+        @apply text-2xl font-semibold md:text-3xl;
+    }
+
+    h4 {
+        @apply text-xl font-semibold md:text-2xl;
+    }
+
+    p {
+        @apply text-base leading-relaxed md:text-lg;
+    }
+
+    a {
+        @apply transition-colors duration-200;
+    }
+}
+
+/* ===== selection ===== */
+
+::selection {
+    @apply bg-accent text-background;
+}
+
+/* ===== scrollbar ===== */
+
+/* width */
+::-webkit-scrollbar {
+    @apply rounded-radius h-2 w-2;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    @apply bg-transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    @apply bg-elevated rounded-radius;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    @apply bg-accent;
+}
+
+/* ===== codeblock ===== */
+
+.astro-code {
+    @apply hover:text-text-default my-4 p-4 font-mono text-base sm:p-6 md:p-8;
+}
+
+pre[data-language] {
+    @apply relative;
+}
+
+pre[data-language]::before {
+    content: attr(data-language);
+    @apply bg-background text-text-faint rounded-radius absolute -top-2 left-12 z-10 px-3 py-1 font-mono text-xs font-medium uppercase;
+}
+
+/* Add line number */
+/* @layer components {
+  code {
+    counter-reset: step;
+  }
+
+  code > .line::before {
+    content: counter(step);
+    counter-increment: step;
+    width: 1rem;
+    margin-right: 1.5rem;
+    display: inline-block;
+    text-align: right;
+    color: var(--color-text-faint);
+  }
+} */
+
+/* ===== prose ===== */
+.prose {
+    @apply text-text-subtle w-full text-lg;
+}
+
+.prose a {
+    @apply text-accent decoration-accent/30 relative overflow-hidden wrap-anywhere underline decoration-2 underline-offset-4;
+}
+
+.prose a::before {
+    @apply bg-accent absolute -bottom-px left-0 h-0.5 w-full origin-right scale-x-0 transition-transform duration-300 ease-in-out;
+    content: "";
+}
+
+.prose a:hover::before {
+    @apply origin-left scale-x-100;
+}
+
+.prose h1 {
+    @apply text-text-default mb-5 pb-3 text-5xl font-extrabold;
+}
+
+.prose h2 {
+    @apply text-text-default mt-8 mb-3 text-4xl font-bold;
+}
+
+.prose h3 {
+    @apply text-text-default mt-12 mb-2 text-2xl font-semibold;
+}
+
+.prose h4 {
+    @apply text-text-default mt-5 mb-2 text-lg font-medium;
+}
+
+.prose h5,
+.prose h6 {
+    @apply text-text-default mt-4 mb-1 text-base font-semibold tracking-wide;
+}
+
+.prose p {
+    @apply text-text-subtle my-6 first:mt-0;
+}
+
+.prose ul {
+    @apply my-4 list-none;
+}
+
+.prose ul>li {
+    @apply text-text-default relative pl-8;
+}
+
+.prose ul>li::before {
+    content: ">";
+    @apply text-accent absolute left-0 font-mono font-medium;
+}
+
+.prose ol {
+    @apply my-4 list-none;
+    counter-reset: ol-counter;
+}
+
+.prose ol>li {
+    @apply text-text-default relative pl-12;
+    counter-increment: ol-counter;
+}
+
+.prose ol>li::before {
+    content: counter(ol-counter, decimal-leading-zero) ". ";
+    @apply text-accent absolute left-0 font-mono font-medium;
+}
+
+.prose blockquote {
+    @apply border-accent text-text-subtle bg-content my-3 border-l-4 px-6 py-4;
+}
+
+.prose blockquote p {
+    @apply my-0;
+}
+
+.prose pre {
+    @apply bg-elevated text-text-default rounded-radius overflow-x-auto p-4;
+}
+
+.prose code {
+    @apply bg-elevated text-text-subtle rounded px-1.5 py-0.5 font-mono;
+}
+
+.prose pre code {
+    @apply block border-0 bg-transparent p-0;
+}
+
+.prose pre code span {
+    @apply font-mono;
+}
+
+.prose table {
+    @apply mt-6 w-full border-collapse overflow-x-scroll;
+}
+
+.prose th,
+.prose td {
+    @apply text-text-subtle px-4 py-2;
+}
+
+.prose th {
+    @apply bg-content text-text-subtle font-bold tracking-wide;
+}
+
+.prose tr:nth-child(even) {
+    @apply bg-content/50;
+}
+
+.prose img {
+    @apply mx-auto;
+}
+
+.prose hr {
+    @apply border-border my-8 opacity-50;
+}
+
+.prose iframe {
+    @apply aspect-video h-auto w-full;
+}

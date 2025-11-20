@@ -1,0 +1,36 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+type Orientation = "horizontal" | "vertical";
+
+interface ButtonGroupProps extends HTMLAttributes<"div"> {
+    orientation?: Orientation;
+    class?: string;
+}
+
+const {
+    orientation = "horizontal",
+    class: className,
+    ...rest
+} = Astro.props as ButtonGroupProps;
+
+const baseClasses = "inline-flex";
+
+const orientationClasses: Record<Orientation, string> = {
+    horizontal:
+        "flex-row [&>*:not(:first-child):not(:last-child)]:rounded-none [&>*:first-child]:rounded-r-none [&>*:last-child]:rounded-l-none [&>*:not(:first-child)]:-ml-px",
+    vertical:
+        "flex-col [&>*:not(:first-child):not(:last-child)]:rounded-none [&>*:first-child]:rounded-b-none [&>*:last-child]:rounded-t-none [&>*:not(:first-child)]:-mt-px",
+};
+
+const resolvedOrientation =
+    orientationClasses[orientation] ?? orientationClasses.horizontal;
+
+const classes = [baseClasses, resolvedOrientation, className?.trim()]
+    .filter(Boolean)
+    .join(" ");
+---
+
+<div role="group" class={classes} {...rest}>
+    <slot />
+</div>
