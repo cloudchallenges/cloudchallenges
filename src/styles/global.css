@@ -297,3 +297,16 @@ pre[data-language]::before {
 .prose iframe {
     @apply aspect-video h-auto w-full;
 }
+
+/* Active styling for filter buttons */
+.provider-btn.active,
+.service-btn.active,
+.tag-btn.active {
+    @apply bg-accent text-background font-semibold;
+}
+
+.provider-btn,
+.service-btn,
+.tag-btn {
+    @apply transition-colors duration-150;
+}

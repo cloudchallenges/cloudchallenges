@@ -1,0 +1,137 @@
+---
+import { getCollection } from "astro:content";
+import type { ChallengeEntry } from "@/lib/types";
+
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Button from "@/components/ui/Button.astro";
+import ButtonGroup from "@/components/ui/ButtonGroup.astro";
+import Toggle from "@/components/ui/Toggle.astro";
+import filterScriptUrl from "@/lib/challengeFilters.ts?url";
+
+const challenges: ChallengeEntry[] = await getCollection("challenges");
+
+const providers = Array.from(
+    new Set(challenges.flatMap((c) => Object.keys(c.data.services ?? {}))),
+).sort();
+
+const servicesByProvider: Record<string, string[]> = {};
+for (const c of challenges) {
+    for (const [provider, services] of Object.entries(c.data.services ?? {})) {
+        if (!servicesByProvider[provider]) servicesByProvider[provider] = [];
+        for (const s of services) {
+            if (!servicesByProvider[provider].includes(s))
+                servicesByProvider[provider].push(s);
+        }
+    }
+}
+for (const k of Object.keys(servicesByProvider)) servicesByProvider[k].sort();
+
+const allTags = Array.from(
+    new Set(challenges.flatMap((c) => c.data.tags ?? [])),
+).sort();
+
+const serialized = challenges.map((e) => ({
+    id: e.id,
+    title: e.data.title ?? e.id,
+    services: e.data.services ?? {},
+    tags: e.data.tags ?? [],
+    summary: e.data.summary ?? "",
+}));
+const serializedSafe = JSON.stringify(serialized).replace(/</g, "\\u003c");
+---
+
+<BaseLayout>
+    <h1>Challenges</h1>
+
+    <section id="filters">
+        <div class="filters-row">
+            <div>
+                <strong>Provider</strong>
+                <ButtonGroup>
+                    {
+                        providers.map((p) => (
+                            <Toggle
+                                class="provider-toggle provider-btn"
+                                data-provider={p}
+                                ariaLabel={`Provider ${p}`}
+                            >
+                                {p}
+                            </Toggle>
+                        ))
+                    }
+                </ButtonGroup>
+            </div>
+
+            <div>
+                <strong>Service</strong>
+                <ButtonGroup id="serviceButtons">
+                    {
+                        Object.entries(servicesByProvider).map(
+                            ([provider, services]) => (
+                                <div
+                                    class="service-group"
+                                    data-provider={provider}
+                                >
+                                    {services.map((s) => (
+                                        <Toggle
+                                            class="service-toggle service-btn"
+                                            data-provider={provider}
+                                            data-service={s}
+                                            ariaLabel={`Service ${s}`}
+                                        >
+                                            {s}
+                                        </Toggle>
+                                    ))}
+                                </div>
+                            ),
+                        )
+                    }
+                </ButtonGroup>
+            </div>
+
+            <div>
+                <strong>Tags</strong>
+                <ButtonGroup id="tagButtons">
+                    {
+                        allTags.map((t) => (
+                            <Toggle
+                                class="tag-toggle tag-btn"
+                                data-tag={t}
+                                ariaLabel={`Tag ${t}`}
+                            >
+                                {t}
+                            </Toggle>
+                        ))
+                    }
+                </ButtonGroup>
+            </div>
+
+            <div>
+                <Button variant="ghost" id="clearFilters">Clear</Button>
+            </div>
+        </div>
+    </section>
+    <script
+        id="challenges-data"
+        type="application/json"
+        set:html={serializedSafe}
+    />
+
+    <ul id="challengeList">
+        {
+            challenges.map((entry) => (
+                <li>
+                    <a href={`/challenge/${entry.id}`}>
+                        {entry.data.title ?? entry.id}
+                    </a>
+                    {entry.data.summary ? <p>{entry.data.summary}</p> : null}
+                    {entry.data.tags && entry.data.tags.length ? (
+                        <small>Tags: {entry.data.tags.join(", ")}</small>
+                    ) : null}
+                </li>
+            ))
+        }
+    </ul>
+
+    <script type="module" src={filterScriptUrl}></script>
+</BaseLayout>

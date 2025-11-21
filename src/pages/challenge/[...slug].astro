@@ -1,0 +1,27 @@
+---
+import { getCollection, render } from "astro:content";
+import type {
+    ChallengeEntry,
+    ChallengePath,
+    ChallengeDetailPageProps,
+} from "@/lib/types";
+import ChallengeLayout from "@/layouts/ChallengeLayout.astro";
+
+export async function getStaticPaths() {
+    const entries = await getCollection("challenges");
+
+    const paths: ChallengePath[] = entries.map((entry: ChallengeEntry) => ({
+        params: { slug: entry.id },
+        props: { entry },
+    }));
+
+    return paths;
+}
+const { entry: challenge } = Astro.props as ChallengeDetailPageProps;
+const { Content } = await render(challenge);
+const idAndData = { ...challenge.data };
+---
+
+<ChallengeLayout {...idAndData}>
+    <Content />
+</ChallengeLayout>
