@@ -1,0 +1,32 @@
+---
+title: "S3 Read-Only Listing"
+uid: "s3-001"
+services:
+  aws:
+    - s3
+tags:
+  - storage
+  - aws
+level: beginner
+duration_hours: 0.5
+summary: "Create an IAM policy that grants read-only listing access to S3 buckets."
+created_at: "2025-11-21"
+coverAlt: "S3 bucket icon"
+---
+
+## S3 Read-Only Listing
+
+This short challenge shows how to grant read-only access to S3 buckets using an IAM policy.
+
+### Steps
+
+1. Create a policy that allows `s3:ListBucket` and `s3:GetObject` on the bucket ARN.
+2. Attach the policy to a group and add a user to that group.
+
+### CLI Example
+
+```bash
+aws iam create-policy --policy-name S3ReadOnly --policy-document '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Action":["s3:ListBucket","s3:GetObject"],"Resource":["arn:aws:s3:::example-bucket","arn:aws:s3:::example-bucket/*"]}]}'
+```
+
+Good for testing your filters — this challenge uses `services: { aws: ["s3"] }` and the `storage` tag.
