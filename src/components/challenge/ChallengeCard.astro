@@ -1,0 +1,94 @@
+---
+import type { ChallengeEntry } from "@/lib/types";
+
+const formatDuration = (hours: number) =>
+    Number.isInteger(hours) ? `${hours}h` : `${hours.toFixed(1)}h`;
+
+const props = Astro.props as { entry: ChallengeEntry };
+const { entry } = props;
+
+const levelLabel = entry.data.level
+    ? `${entry.data.level[0].toUpperCase()}${entry.data.level.slice(1)}`
+    : undefined;
+
+const durationLabel =
+    typeof entry.data.duration_hours === "number" &&
+    entry.data.duration_hours > 0
+        ? formatDuration(entry.data.duration_hours)
+        : undefined;
+
+const createdLabel = entry.data.created_at
+    ? new Intl.DateTimeFormat("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+      }).format(entry.data.created_at)
+    : undefined;
+
+const summaryText = entry.data.summary?.trim();
+const highlightChips = [...entry.data.providers, ...entry.data.services];
+const tagList = entry.data.tags ?? [];
+---
+
+<a
+    href={`/challenge/${entry.id}`}
+    class="group"
+    aria-label={`View challenge details for ${entry.data.title ?? entry.id}`}
+>
+    <article
+        class="flex h-full flex-col justify-between gap-5 rounded-3xl border border-border bg-content/70 p-6 transition duration-300 hover:border-accent/70 focus-visible:outline-2 focus-visible:outline-accent/50"
+    >
+        <header class="flex items-start justify-between gap-4">
+            <div>
+                <p
+                    class="text-xs font-semibold uppercase tracking-widest text-text-faint"
+                >
+                    {levelLabel ?? "Challenge"}
+                </p>
+                <h2
+                    class="mt-2 text-2xl font-semibold text-text-default transition-colors duration-200 group-hover:text-accent"
+                >
+                    {entry.data.title ?? entry.id}
+                </h2>
+            </div>
+            <div
+                class="flex flex-col items-end text-xs text-text-subtle space-y-1"
+            >
+                {
+                    durationLabel && (
+                        <span class="rounded-full border border-border/50 px-3 py-1 font-semibold uppercase tracking-widest text-text-faint">
+                            {durationLabel}
+                        </span>
+                    )
+                }
+                {createdLabel && <span>{createdLabel}</span>}
+            </div>
+        </header>
+
+        {summaryText && <p class="text-sm text-text-subtle">{summaryText}</p>}
+
+        {
+            highlightChips.length > 0 && (
+                <div class="flex flex-wrap gap-2">
+                    {highlightChips.map((chip) => (
+                        <span class="rounded-full border border-border/50 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-text-faint">
+                            {chip}
+                        </span>
+                    ))}
+                </div>
+            )
+        }
+
+        {
+            tagList.length > 0 && (
+                <div class="flex flex-wrap gap-2">
+                    {tagList.map((tag) => (
+                        <span class="rounded-2xl bg-elevated/60 px-3 py-1 text-xs font-semibold text-text-subtle">
+                            {tag}
+                        </span>
+                    ))}
+                </div>
+            )
+        }
+    </article>
+</a>

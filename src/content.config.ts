@@ -11,10 +11,8 @@ const challenges = defineCollection({
     z.object({
       title: z.string(),
       uid: z.string().optional(),
-      services: z
-        .record(z.array(z.string()))
-        .default({ aws: [] })
-        .optional(),
+      providers: z.array(z.string()).default([]),
+      services: z.array(z.string()).default([]),
       tags: z.array(z.string()).default([]),
       level: z
         .enum(["beginner", "easy", "intermediate", "advanced", "expert"])
