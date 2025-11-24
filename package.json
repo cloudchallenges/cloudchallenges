@@ -20,7 +20,7 @@
         "astro-icon": "^1.1.5",
         "plyr": "^3.8.3",
         "rehype-pretty-code": "^0.14.1",
-        "sharp": "^0.34.4",
+        "sharp": "^0.34.5",
         "shiki": "^3.14.0",
         "tailwindcss": "^4.1.16",
         "typescript": "^5.9.3"
