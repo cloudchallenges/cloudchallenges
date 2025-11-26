@@ -4,6 +4,7 @@ import Header from "@/components/core/Header.astro";
 
 import { LOCALE } from "@data/config";
 import type { BaseLayoutProps } from "@/lib/types";
+import Copy from "@/components/core/Copy.astro";
 
 const { title, description, image, imageAlt, contentType } =
     Astro.props as BaseLayoutProps;
@@ -21,6 +22,7 @@ const { title, description, image, imageAlt, contentType } =
     </head>
 
     <body class="flex flex-col">
+        <Copy />
         <Header />
         <div class="flex flex-1">
             <main class="flex h-full w-full justify-center">

@@ -144,8 +144,8 @@
 
 /* ===== codeblock ===== */
 
-.astro-code {
-    @apply hover:text-text-default my-4 p-4 font-mono text-base sm:p-6 md:p-8;
+/* .astro-code {
+    @apply hover:text-text-default font-mono text-base py-2;
 }
 
 pre[data-language] {
@@ -155,28 +155,28 @@ pre[data-language] {
 pre[data-language]::before {
     content: attr(data-language);
     @apply bg-background text-text-faint rounded-radius absolute -top-2 left-12 z-10 px-3 py-1 font-mono text-xs font-medium uppercase;
-}
+} */
 
 /* Add line number */
-/* @layer components {
-  code {
-    counter-reset: step;
-  }
+@layer components {
+    code {
+        counter-reset: step;
+    }
 
-  code > .line::before {
-    content: counter(step);
-    counter-increment: step;
-    width: 1rem;
-    margin-right: 1.5rem;
-    display: inline-block;
-    text-align: right;
-    color: var(--color-text-faint);
-  }
-} */
+    code>.line::before {
+        content: counter(step);
+        counter-increment: step;
+        width: 1rem;
+        margin-right: 1.5rem;
+        display: inline-block;
+        text-align: right;
+        color: var(--color-text-subtle);
+    }
+}
 
 /* ===== prose ===== */
 .prose {
-    @apply text-text-subtle w-full text-lg;
+    @apply text-text-subtle w-full;
 }
 
 .prose a {
@@ -254,15 +254,15 @@ pre[data-language]::before {
 }
 
 .prose pre {
-    @apply bg-elevated text-text-default rounded-radius overflow-x-auto p-4;
+    @apply bg-elevated text-text-default rounded-radius;
 }
 
 .prose code {
-    @apply bg-elevated text-text-subtle rounded px-1.5 py-0.5 font-mono;
+    @apply bg-elevated text-text-subtle rounded px-1.5 py-px font-mono;
 }
 
 .prose pre code {
-    @apply block border-0 bg-transparent p-0;
+    @apply block border-0 bg-transparent p-0 rounded m-4 font-mono overflow-x-auto;
 }
 
 .prose pre code span {
@@ -296,17 +296,4 @@ pre[data-language]::before {
 
 .prose iframe {
     @apply aspect-video h-auto w-full;
-}
-
-/* Active styling for filter buttons */
-.provider-btn.active,
-.service-btn.active,
-.tag-btn.active {
-    @apply bg-accent text-background font-semibold;
-}
-
-.provider-btn,
-.service-btn,
-.tag-btn {
-    @apply transition-colors duration-150;
 }
