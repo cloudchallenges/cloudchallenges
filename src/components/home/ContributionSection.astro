@@ -1,0 +1,133 @@
+---
+/**
+ * ContributionSection — Contribution / Discussion
+ * Invite to propose challenges and join discussion
+ */
+import { DotPattern } from "@/components/backgrounds/DotPattern";
+---
+
+<section class="relative overflow-hidden py-16 md:py-24">
+    <!-- Dot pattern background -->
+    <DotPattern
+        client:visible
+        width={24}
+        height={24}
+        cr={1}
+        className="fill-neutral-400/20 dark:fill-neutral-600/15 mask-[linear-gradient(to_bottom,transparent,white_20%,white_80%,transparent)]"
+    />
+
+    <div class="container relative mx-auto px-4">
+        <div class="mx-auto max-w-3xl">
+            <!-- Heading -->
+            <div class="mb-8 text-center">
+                <h2 class="mb-4 text-3xl font-bold tracking-tight md:text-4xl">
+                    Contribute & discuss
+                </h2>
+                <p class="text-muted-foreground">
+                    Have an idea for a challenge? Want to improve an existing
+                    prompt? Join the discussion or submit a draft. Community
+                    contributions help keep the challenges realistic and
+                    diverse.
+                </p>
+            </div>
+
+            <!-- Links grid -->
+            <div class="grid gap-4 md:grid-cols-3">
+                <!-- Contribute -->
+                <a
+                    href="https://github.com/cloudchallenges/cloudchallenges/blob/main/CONTRIBUTING.md"
+                    class="group flex flex-col items-center rounded-lg border bg-card p-6 text-center transition-colors hover:border-primary/50 hover:bg-accent/50"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="mb-3 h-6 w-6 text-muted-foreground transition-colors group-hover:text-primary"
+                        aria-hidden="true"
+                    >
+                        <path
+                            d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65S8.93 17.38 9 18v4"
+                        ></path>
+                        <path d="M9 18c-4.51 2-5-2-7-2"></path>
+                    </svg>
+                    <span class="font-medium">Contribute a challenge</span>
+                    <span class="mt-1 text-xs text-muted-foreground">
+                        Read contribution guidelines
+                    </span>
+                </a>
+
+                <!-- Discussion -->
+                <a
+                    href="https://github.com/cloudchallenges/cloudchallenges/discussions"
+                    class="group flex flex-col items-center rounded-lg border bg-card p-6 text-center transition-colors hover:border-primary/50 hover:bg-accent/50"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="mb-3 h-6 w-6 text-muted-foreground transition-colors group-hover:text-primary"
+                        aria-hidden="true"
+                    >
+                        <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path>
+                    </svg>
+                    <span class="font-medium">Discussion forum</span>
+                    <span class="mt-1 text-xs text-muted-foreground">
+                        Join GitHub Discussions
+                    </span>
+                </a>
+
+                <!-- Feedback -->
+                <a
+                    href="https://github.com/cloudchallenges/cloudchallenges/issues/new"
+                    class="group flex flex-col items-center rounded-lg border bg-card p-6 text-center transition-colors hover:border-primary/50 hover:bg-accent/50"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="mb-3 h-6 w-6 text-muted-foreground transition-colors group-hover:text-primary"
+                        aria-hidden="true"
+                    >
+                        <path
+                            d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+                        ></path>
+                    </svg>
+                    <span class="font-medium">Submit feedback</span>
+                    <span class="mt-1 text-xs text-muted-foreground"
+                        >Open an issue</span
+                    >
+                </a>
+            </div>
+
+            <!-- Microcopy -->
+            <p class="mt-8 text-center text-sm text-muted-foreground">
+                We review submissions and help authors shape prompts to be
+                teachable, measurable, and free-tier friendly.
+            </p>
+        </div>
+    </div>
+</section>

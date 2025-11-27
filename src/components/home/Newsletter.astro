@@ -1,0 +1,92 @@
+---
+/**
+ * Newsletter — Signup / Newsletter (optional)
+ * Lightweight email capture with privacy note
+ */
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+---
+
+<section class="py-16 md:py-24">
+    <div class="container mx-auto px-4">
+        <div
+            class="mx-auto max-w-xl rounded-xl border bg-card p-8 text-center shadow-sm"
+        >
+            <!-- Icon -->
+            <div
+                class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="h-6 w-6 text-primary"
+                    aria-hidden="true"
+                >
+                    <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+                </svg>
+            </div>
+
+            <!-- Heading -->
+            <h2 class="mb-2 text-2xl font-bold">
+                Get weekly challenge updates
+            </h2>
+
+            <!-- Subhead -->
+            <p class="mb-6 text-muted-foreground">
+                We'll email when a new challenge drops (no spam). Early access
+                to beta features included.
+            </p>
+
+            <!-- Email form -->
+            <form
+                id="newsletter-form"
+                class="mx-auto flex max-w-md flex-col gap-3 sm:flex-row"
+                action="#"
+                method="post"
+            >
+                <label for="newsletter-email" class="sr-only"
+                    >Email address</label
+                >
+                <Input
+                    type="email"
+                    id="newsletter-email"
+                    name="email"
+                    placeholder="you@example.com"
+                    required
+                    className="flex-1"
+                />
+                <Button type="submit" className="shrink-0"> Sign up </Button>
+            </form>
+
+            <!-- Privacy note -->
+            <p class="mt-4 text-xs text-muted-foreground">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="mr-1 inline-block"
+                    aria-hidden="true"
+                >
+                    <rect width="18" height="11" x="3" y="11" rx="2" ry="2"
+                    ></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                We'll never sell your email.
+            </p>
+        </div>
+    </div>
+</section>

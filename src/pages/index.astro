@@ -1,29 +1,39 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import {
-    Card,
-    CardHeader,
-    CardTitle,
-    CardDescription,
-    CardContent,
-} from "@/components/ui/card";
-import setupGraphic from "@/assets/setup.png";
-import { Image } from "astro:assets";
+import HeroSection from "@/components/home/HeroSection.astro";
+import ConceptBlock from "@/components/home/ConceptBlock.astro";
+import InspirationBlock from "@/components/home/InspirationBlock.astro";
+import HowItWorks from "@/components/home/HowItWorks.astro";
+import CTAStrip from "@/components/home/CTAStrip.astro";
+import ContributionSection from "@/components/home/ContributionSection.astro";
+import Newsletter from "@/components/home/Newsletter.astro";
+
+const pageTitle = "Cloud Challenges — Real problems. Build real solutions.";
+const pageDescription =
+    "Practical, cloud-native DevOps challenges that go beyond tutorials. Design, implement, and validate your own solutions using real-world constraints.";
 ---
 
-<BaseLayout>
-    <section class="space-y-6 py-8">
-        <Card className="bg-card/60">
-            <CardHeader>
-                <CardTitle className="text-3xl">ImageViewer demo</CardTitle>
-                <CardDescription>
-                    Clicking the preview will open a modal powered by the shared
-                    component.
-                </CardDescription>
-            </CardHeader>
-            <CardContent>
-                <Image src={setupGraphic} alt="Project setup hero" />
-            </CardContent>
-        </Card>
-    </section>
+<BaseLayout title={pageTitle} description={pageDescription} fullWidth={true}>
+    <!-- Hero section with flickering grid background -->
+    <HeroSection />
+
+    <!-- 1. Concept Block — "What Cloud Challenges is" -->
+    <ConceptBlock />
+
+    <!-- 2. Inspiration Block — "Why we built this" -->
+    <InspirationBlock />
+
+    <!-- 3. How It Works — 3-step visual flow -->
+    <div id="how-it-works">
+        <HowItWorks />
+    </div>
+
+    <!-- 4. Primary CTA Strip -->
+    <!-- <CTAStrip /> -->
+
+    <!-- 5. Contribution / Discussion -->
+    <ContributionSection />
+
+    <!-- 6. Signup / Newsletter -->
+    <!-- <Newsletter /> -->
 </BaseLayout>

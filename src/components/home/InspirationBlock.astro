@@ -1,0 +1,62 @@
+---
+/**
+ * InspirationBlock — "Why we built this"
+ * One prominent quote + short explanation
+ */
+import { GridPattern } from "@/components/backgrounds/GridPattern";
+---
+
+<section class="relative overflow-hidden py-16 md:py-24">
+    <!-- Grid pattern background -->
+    <GridPattern
+        client:visible
+        width={50}
+        height={50}
+        className="stroke-neutral-300/40 dark:stroke-neutral-700/30 mask-[radial-gradient(ellipse_at_center,white,transparent_75%)]"
+        squares={[
+            [1, 2],
+            [3, 4],
+            [5, 1],
+            [7, 3],
+            [2, 6],
+            [8, 5],
+        ]}
+    />
+
+    <!-- Subtle gradient overlay -->
+    <div
+        class="absolute inset-0 bg-linear-to-b from-transparent via-muted/20 to-transparent"
+        aria-hidden="true"
+    >
+    </div>
+
+    <div class="container relative mx-auto px-4">
+        <div class="mx-auto max-w-3xl text-center">
+            <!-- Quote -->
+            <figure class="mb-8">
+                <blockquote>
+                    <p
+                        class="text-2xl font-semibold italic tracking-tight text-foreground md:text-3xl lg:text-4xl"
+                    >
+                        "Most courses teach tools. We teach engineering
+                        thinking."
+                    </p>
+                </blockquote>
+            </figure>
+
+            <!-- Explanation paragraph -->
+            <div class="space-y-4 text-muted-foreground">
+                <p class="text-base md:text-lg">
+                    DevOps is not a checklist of tools. It is an approach to
+                    design, automate, and operate systems reliably and securely.
+                    Cloud Challenges was created because engineers need practice
+                    solving <em>incomplete</em> problems: ambiguous specs, cost constraints,
+                    failure modes, and trade-offs.
+                </p>
+                <p class="text-base font-medium text-foreground md:text-lg">
+                    We provide the problems. You craft the solutions.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>

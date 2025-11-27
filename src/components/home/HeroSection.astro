@@ -1,0 +1,158 @@
+---
+/**
+ * HeroSection — Main hero with background pattern
+ */
+import { FlickeringGrid } from "@/components/backgrounds/FlickeringGrid";
+---
+
+<section class="relative overflow-hidden py-20 md:py-32">
+    <!-- Flickering grid background - rendered client-side for performance -->
+    <FlickeringGrid
+        client:visible
+        squareSize={4}
+        gridGap={6}
+        flickerChance={0.3}
+        color="rgb(100, 100, 100)"
+        maxOpacity={0.06}
+        className="h-full w-full"
+    />
+
+    <!-- Gradient overlay for legibility -->
+    <div
+        class="absolute inset-0 bg-linear-to-b from-background/80 via-background/60 to-background"
+        aria-hidden="true"
+    >
+    </div>
+
+    <div class="container relative mx-auto px-4">
+        <div class="mx-auto max-w-4xl text-center">
+            <!-- Badge -->
+            <div
+                class="mb-6 inline-flex items-center rounded-full border bg-muted/50 px-4 py-1.5 text-sm"
+            >
+                <span
+                    class="mr-2 inline-block h-2 w-2 rounded-full bg-green-500"
+                ></span>
+                <span>Open source & free forever</span>
+            </div>
+
+            <!-- Main heading -->
+            <h1
+                class="mb-6 text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl"
+            >
+                Master cloud-native DevOps<br class="hidden sm:inline" />
+                <span class="text-primary">by solving real problems</span>
+            </h1>
+
+            <!-- Subheading -->
+            <p
+                class="mx-auto mb-8 max-w-2xl text-lg text-muted-foreground md:text-xl"
+            >
+                Practical DevOps challenges that go beyond tutorials. Design,
+                implement, and validate your own cloud-native solutions using
+                real-world constraints.
+            </p>
+
+            <!-- CTA buttons -->
+            <div class="flex flex-wrap items-center justify-center gap-4">
+                <a
+                    href="/challenge"
+                    aria-label="Start your first challenge"
+                    class="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-all hover:bg-primary/90 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
+                >
+                    Start a Challenge
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                        class="size-4"
+                    >
+                        <path d="M5 12h14"></path>
+                        <path d="m12 5 7 7-7 7"></path>
+                    </svg>
+                </a>
+                <a
+                    href="#how-it-works"
+                    aria-label="Learn how Cloud Challenges works"
+                    class="inline-flex h-10 items-center justify-center gap-2 rounded-md border bg-background px-6 text-sm font-medium shadow-xs transition-all hover:bg-accent hover:text-accent-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] dark:border-input dark:bg-input/30 dark:hover:bg-input/50"
+                >
+                    How it Works
+                </a>
+            </div>
+
+            <!-- Stats or social proof -->
+            <div
+                class="mt-12 flex flex-wrap items-center justify-center gap-8 text-sm text-muted-foreground"
+            >
+                <div class="flex items-center gap-2">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                    >
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"
+                        ></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    <span>Community-driven</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                    >
+                        <path d="M12 2v20"></path>
+                        <path
+                            d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"
+                        ></path>
+                    </svg>
+                    <span>Free-tier friendly</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                    >
+                        <rect width="20" height="14" x="2" y="7" rx="2" ry="2"
+                        ></rect>
+                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"
+                        ></path>
+                    </svg>
+                    <span>Portfolio-ready projects</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

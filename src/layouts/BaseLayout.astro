@@ -6,11 +6,21 @@ import { LOCALE } from "@data/config";
 import type { BaseLayoutProps } from "@/lib/types";
 import Copy from "@/components/core/Copy.astro";
 
-const { title, description, image, imageAlt, contentType } =
-    Astro.props as BaseLayoutProps;
+interface Props extends BaseLayoutProps {
+    fullWidth?: boolean;
+}
+
+const {
+    title,
+    description,
+    image,
+    imageAlt,
+    contentType,
+    fullWidth = false,
+} = Astro.props as Props;
 ---
 
-<html lang=`${LOCALE.lang ?? "en"}`>
+<html lang={LOCALE.lang ?? "en"}>
     <head>
         <HeadSEO
             title={title}
@@ -25,12 +35,16 @@ const { title, description, image, imageAlt, contentType } =
         <Copy />
         <div class="relative isolate flex min-h-screen flex-col">
             <Header />
-            <main class="relative z-10 flex flex-1">
-                <div
-                    class="container mx-auto flex w-full max-w-6xl flex-col gap-10 px-4 py-10 lg:gap-14 lg:py-14"
-                >
-                    <slot />
-                </div>
+            <main class="relative z-10 flex flex-1 flex-col">
+                {
+                    fullWidth ? (
+                        <slot />
+                    ) : (
+                        <div class="container mx-auto flex w-full max-w-6xl flex-col gap-10 px-4 py-10 lg:gap-14 lg:py-14">
+                            <slot />
+                        </div>
+                    )
+                }
             </main>
         </div>
     </body>
