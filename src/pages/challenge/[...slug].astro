@@ -12,16 +12,15 @@ export async function getStaticPaths() {
 
     const paths: ChallengePath[] = entries.map((entry: ChallengeEntry) => ({
         params: { slug: entry.id },
-        props: { entry },
+        props: { entry, headings: [] },
     }));
 
     return paths;
 }
 const { entry: challenge } = Astro.props as ChallengeDetailPageProps;
 const { Content } = await render(challenge);
-const idAndData = { ...challenge.data };
 ---
 
-<ChallengeLayout {...idAndData}>
+<ChallengeLayout entry={challenge}>
     <Content />
 </ChallengeLayout>

@@ -4,16 +4,28 @@ import type { ChallengeEntry } from "@/lib/types";
 
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import ChallengeCard from "@/components/challenge/ChallengeCard.astro";
+import { Badge } from "@/components/ui/badge";
 
 const challenges: ChallengeEntry[] = await getCollection("challenges");
 ---
 
 <BaseLayout>
-    <section class="space-y-6 py-8">
-        <div class="space-y-2">
-            <h1 class="text-4xl font-bold tracking-tight">Challenges</h1>
-            <p class="text-base text-text-subtle">
-                Pick a hands-on lab to sharpen your cloud skills.
+    <section class="space-y-8">
+        <div class="space-y-3">
+            <Badge
+                variant="secondary"
+                className="w-fit rounded-full px-3 py-1 text-[0.6rem] font-semibold uppercase tracking-[0.35em]"
+            >
+                Hands-on Labs
+            </Badge>
+            <h1 class="text-4xl font-bold tracking-tight text-foreground">
+                Challenges
+            </h1>
+            <p
+                class="max-w-2xl text-base leading-relaxed text-muted-foreground"
+            >
+                Pick a hands-on lab to sharpen your cloud skills. Each challenge
+                comes with real-world scenarios across AWS, Azure, and GCP.
             </p>
         </div>
 
