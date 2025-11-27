@@ -59,15 +59,18 @@ const formatStarCount = (count: number): string => {
                 target="_blank"
                 rel="noopener noreferrer"
                 class={cn(
-                    buttonVariants({ variant: "ghost", size: "icon" }),
-                    "relative",
+                    buttonVariants({
+                        variant: "ghost",
+                        size: showStarCount ? "default" : "icon",
+                    }),
+                    showStarCount && "gap-2",
                 )}
                 aria-label="GitHub repository"
             >
                 <Icon name="github" class="size-5" />
                 {
                     showStarCount && (
-                        <span class="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[0.6rem] font-semibold text-primary-foreground">
+                        <span class="text-sm font-medium text-muted-foreground">
                             {formatStarCount(starCount)}
                         </span>
                     )
