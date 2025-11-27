@@ -1,5 +1,137 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import type { ChallengeEntry } from "@/lib/types";
+
+const formatDuration = (hours: number) =>
+    Number.isInteger(hours) ? `${hours}h` : `${hours.toFixed(1)}h`;
+
+const props = Astro.props as { entry: ChallengeEntry };
+const { entry } = props;
+const { data } = entry;
+
+const title = data.title ?? entry.id;
+const levelLabel = data.level
+    ? `${data.level[0].toUpperCase()}${data.level.slice(1)}`
+    : "Challenge";
+const durationLabel =
+    typeof data.duration_hours === "number" && data.duration_hours > 0
+        ? formatDuration(data.duration_hours)
+        : "Flexible pace";
+const createdLabel = data.created_at
+    ? new Intl.DateTimeFormat("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+      }).format(data.created_at)
+    : undefined;
+const summaryText = data.summary?.trim();
+const providers = data.providers ?? [];
+const services = data.services ?? [];
+const highlightChips = providers.concat(services);
+const tags = data.tags ?? [];
+const seoImage = data.cover ?? undefined;
+const seoImageAlt = data.coverAlt ?? title;
+const seoDescription =
+    summaryText ??
+    `Take a ${data.level ?? "cloud"} challenge and sharpen your skills.`;
+
+const metadata = [
+    { label: "Duration", value: durationLabel },
+    { label: "Level", value: levelLabel },
+    { label: "Updated", value: createdLabel ?? "TBD" },
+];
 ---
 
-<BaseLayout><slot /></BaseLayout>
+<BaseLayout
+    title={title}
+    description={seoDescription}
+    image={seoImage}
+    imageAlt={seoImageAlt}
+    contentType="article"
+>
+    <article class="space-y-8">
+        <header class="space-y-6 text-center">
+            <div class="flex flex-wrap items-center justify-center gap-2">
+                <Badge
+                    variant="secondary"
+                    className="rounded-full px-3 py-1 text-[0.6rem] font-semibold uppercase tracking-[0.3em]"
+                >
+                    {levelLabel}
+                </Badge>
+                {
+                    highlightChips.map((chip) => (
+                        <Badge
+                            variant="outline"
+                            className="rounded-full px-2.5 py-0.5 text-[0.65rem] font-semibold uppercase tracking-widest"
+                        >
+                            {chip}
+                        </Badge>
+                    ))
+                }
+            </div>
+            <h1
+                class="mx-auto max-w-4xl text-3xl font-bold leading-tight tracking-tight text-foreground sm:text-4xl lg:text-5xl"
+            >
+                {title}
+            </h1>
+            {
+                summaryText && (
+                    <p class="mx-auto max-w-2xl text-lg leading-relaxed text-muted-foreground">
+                        {summaryText}
+                    </p>
+                )
+            }
+        </header>
+
+        <div
+            class="flex flex-wrap items-center justify-center gap-4 rounded-2xl border border-border/60 bg-muted/30 px-6 py-4"
+        >
+            {
+                metadata.map((item, index) => (
+                    <>
+                        <div class="text-center">
+                            <p class="text-[0.65rem] uppercase tracking-[0.25em] text-muted-foreground">
+                                {item.label}
+                            </p>
+                            <p class="text-base font-semibold text-foreground">
+                                {item.value}
+                            </p>
+                        </div>
+                        {index < metadata.length - 1 && (
+                            <Separator
+                                orientation="vertical"
+                                className="hidden h-8 md:block"
+                            />
+                        )}
+                    </>
+                ))
+            }
+        </div>
+
+        {
+            tags.length > 0 && (
+                <div class="flex flex-wrap items-center justify-center gap-2">
+                    {tags.map((tag) => (
+                        <Badge
+                            variant="secondary"
+                            className="rounded-full px-3 py-1 text-[0.65rem] font-medium"
+                        >
+                            {tag}
+                        </Badge>
+                    ))}
+                </div>
+            )
+        }
+
+        <Separator />
+
+        <Card className="border-border/60 bg-card/80 shadow-md">
+            <CardContent className="prose max-w-none p-6 lg:p-8">
+                <slot />
+            </CardContent>
+        </Card>
+    </article>
+</BaseLayout>
