@@ -1,0 +1,41 @@
+---
+import type { MarkdownHeading } from "astro";
+
+interface TableOfContentsProps {
+    headings?: MarkdownHeading[];
+    title?: string;
+}
+
+const { headings = [], title = "On this page" } =
+    Astro.props as TableOfContentsProps;
+---
+
+<aside
+    class="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto px-2 py-4 w-64 hidden lg:block"
+>
+    <h2
+        class="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground"
+    >
+        {headings.length > 0 && title}
+    </h2>
+    <nav aria-label="Table of contents">
+        <ul class="space-y-1">
+            {
+                headings
+                    .filter(
+                        (h: MarkdownHeading) => h.depth === 2 || h.depth === 3,
+                    )
+                    .map((h: MarkdownHeading) => (
+                        <li class:list={[h.depth === 2 ? "ml-0" : "ml-4"]}>
+                            <a
+                                href={`#${h.slug}`}
+                                class="block truncate rounded px-2 py-1 text-sm text-muted-foreground hover:text-primary focus:text-primary focus:outline-none transition-colors"
+                            >
+                                {h.text}
+                            </a>
+                        </li>
+                    ))
+            }
+        </ul>
+    </nav>
+</aside>

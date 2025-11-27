@@ -11,7 +11,6 @@ import {
     CardContent,
     CardFooter,
 } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
 
 interface ChallengeListProps {
     challenges: Challenge[];
@@ -21,18 +20,10 @@ interface ChallengeListProps {
     allLevels: string[];
 }
 
-const formatDuration = (hours: number) =>
-    Number.isInteger(hours) ? `${hours}h` : `${hours.toFixed(1)}h`;
-
 function ChallengeCard({ challenge }: { challenge: Challenge }) {
     const levelLabel = challenge.level
         ? `${challenge.level[0].toUpperCase()}${challenge.level.slice(1)}`
         : undefined;
-
-    const durationLabel =
-        typeof challenge.duration_hours === "number" && challenge.duration_hours > 0
-            ? formatDuration(challenge.duration_hours)
-            : undefined;
 
     const createdLabel = challenge.created_at
         ? new Intl.DateTimeFormat("en-US", {
@@ -61,14 +52,6 @@ function ChallengeCard({ challenge }: { challenge: Challenge }) {
                         >
                             {levelLabel ?? "Challenge"}
                         </Badge>
-                        {durationLabel && (
-                            <Badge
-                                variant="outline"
-                                className="rounded-full px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-widest"
-                            >
-                                {durationLabel}
-                            </Badge>
-                        )}
                     </div>
                     <CardTitle className="mt-3 text-xl font-bold leading-snug tracking-tight transition-colors duration-200 group-hover:text-primary">
                         {challenge.title ?? challenge.id}
