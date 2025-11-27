@@ -1,0 +1,75 @@
+---
+import { getCollection, render } from "astro:content";
+import type {
+    ChallengeEntry,
+    SolutionEntry,
+    SolutionPath,
+    SolutionDetailPageProps,
+    ChallengeHeadings,
+} from "@/lib/types";
+import ChallengeLayout from "@/layouts/ChallengeLayout.astro";
+import { Button } from "@/components/ui/button";
+import { Icon } from "astro-icon/components";
+import ComingSoon from "@/components/challenge/solution/ComingSoon.astro";
+
+export async function getStaticPaths() {
+    const challenges = await getCollection("challenges");
+    const solutions = await getCollection("solutions");
+
+    const paths: SolutionPath[] = challenges.map(
+        (challenge: ChallengeEntry) => {
+            // Find matching solution by challenge_uid
+            const matchingSolution =
+                solutions.find(
+                    (sol: SolutionEntry) =>
+                        sol.data.challenge_uid === challenge.data.uid,
+                ) ?? null;
+
+            return {
+                params: { slug: challenge.id },
+                props: { challenge, solution: matchingSolution },
+            };
+        },
+    );
+
+    return paths;
+}
+
+const { challenge, solution } = Astro.props as SolutionDetailPageProps;
+const { data: challengeData } = challenge;
+
+const title = challengeData.title ?? challenge.id;
+const levelLabel = challengeData.level
+    ? `${challengeData.level[0].toUpperCase()}${challengeData.level.slice(1)}`
+    : null;
+const summaryText = challengeData.summary?.trim();
+const providers = challengeData.providers ?? [];
+const services = challengeData.services ?? [];
+const tags = challengeData.tags ?? [];
+
+const seoDescription = solution
+    ? `Solution for ${title} challenge`
+    : `Solution coming soon for ${title}`;
+
+const challengeUrl = `/challenge/${challenge.id}`;
+const solutionUrl = `/challenge/${challenge.id}/solution`;
+
+// Solution content if available
+let SolutionContent = null;
+let headings: ChallengeHeadings = [];
+if (solution) {
+    const rendered = await render(solution);
+    SolutionContent = rendered.Content;
+    headings = rendered.headings ?? [];
+}
+---
+
+<ChallengeLayout entry={challenge} activeTab="solution" headings={headings}>
+    {
+        solution && SolutionContent ? (
+            <SolutionContent />
+        ) : (
+            <ComingSoon challengeUrl={challengeUrl} />
+        )
+    }
+</ChallengeLayout>

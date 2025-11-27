@@ -40,10 +40,25 @@ export type ChallengeHeadings = MarkdownHeading[];
 // For src/pages/post/[...slug].astro
 export interface ChallengeDetailPageProps {
     entry: ChallengeEntry;
-    headings: ChallengeHeadings;
+    headings?: ChallengeHeadings;
 }
 
 export interface ChallengePath {
     params: { slug: string };
-    props: ChallengeDetailPageProps;
+    props: { entry: ChallengeEntry; headings?: ChallengeHeadings };
+}
+
+// Solution types
+export type SolutionEntry = CollectionEntry<"solutions">;
+export type Solutions = SolutionEntry[];
+export type SolutionData = SolutionEntry["data"];
+
+export interface SolutionDetailPageProps {
+    challenge: ChallengeEntry;
+    solution: SolutionEntry | null;
+}
+
+export interface SolutionPath {
+    params: { slug: string };
+    props: SolutionDetailPageProps;
 }

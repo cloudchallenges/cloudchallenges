@@ -4,36 +4,19 @@ import HeroSection from "@/components/home/HeroSection.astro";
 import ConceptBlock from "@/components/home/ConceptBlock.astro";
 import InspirationBlock from "@/components/home/InspirationBlock.astro";
 import HowItWorks from "@/components/home/HowItWorks.astro";
-import CTAStrip from "@/components/home/CTAStrip.astro";
 import ContributionSection from "@/components/home/ContributionSection.astro";
-import Newsletter from "@/components/home/Newsletter.astro";
 
-const pageTitle = "Cloud Challenges — Real problems. Build real solutions.";
+const pageTitle = "Cloud Challenges - Real problems. Build real solutions.";
 const pageDescription =
     "Practical, cloud-native DevOps challenges that go beyond tutorials. Design, implement, and validate your own solutions using real-world constraints.";
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription} fullWidth={true}>
-    <!-- Hero section with flickering grid background -->
     <HeroSection />
-
-    <!-- 1. Concept Block — "What Cloud Challenges is" -->
     <ConceptBlock />
-
-    <!-- 2. Inspiration Block — "Why we built this" -->
     <InspirationBlock />
-
-    <!-- 3. How It Works — 3-step visual flow -->
     <div id="how-it-works">
         <HowItWorks />
     </div>
-
-    <!-- 4. Primary CTA Strip -->
-    <!-- <CTAStrip /> -->
-
-    <!-- 5. Contribution / Discussion -->
     <ContributionSection />
-
-    <!-- 6. Signup / Newsletter -->
-    <!-- <Newsletter /> -->
 </BaseLayout>
