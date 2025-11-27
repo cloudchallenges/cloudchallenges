@@ -21,12 +21,21 @@ const { title, description, image, imageAlt, contentType } =
         />
     </head>
 
-    <body class="flex flex-col">
+    <body class="min-h-screen bg-background text-foreground antialiased">
         <Copy />
-        <Header />
-        <div class="flex flex-1">
-            <main class="flex h-full w-full justify-center">
-                <div class="flex w-full max-w-7xl flex-col justify-center px-4">
+        <div
+            class="relative isolate flex min-h-screen flex-col overflow-hidden"
+        >
+            <div
+                aria-hidden="true"
+                class="pointer-events-none absolute inset-x-0 top-[-200px] z-0 mx-auto size-[620px] rounded-full bg-linear-to-br from-primary/15 via-primary/5 to-transparent blur-3xl"
+            >
+            </div>
+            <Header />
+            <main class="relative z-10 flex flex-1">
+                <div
+                    class="container mx-auto flex w-full max-w-6xl flex-col gap-10 px-4 py-10 lg:gap-14 lg:py-14"
+                >
                     <slot />
                 </div>
             </main>

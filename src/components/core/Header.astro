@@ -1,78 +1,101 @@
 ---
 import { Icon } from "astro-icon/components";
-import { navItems } from "@data/config";
-import Button from "@/components/ui/Button.astro";
-import Logo from "@/assets/cloud-white.svg";
+import { SITE, navItems } from "@data/config";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import ThemeToggle from "@/components/core/ThemeToggle.astro";
+import { NavMenu } from "@/components/core/NavMenu";
 
 const pathname = new URL(Astro.request.url).pathname;
+
+// Fetch GitHub stars count
+let starCount = 0;
+try {
+    const repoPath = SITE.repo.replace("https://github.com/", "");
+    const response = await fetch(`https://api.github.com/repos/${repoPath}`, {
+        headers: {
+            Accept: "application/vnd.github.v3+json",
+            "User-Agent": "cloudchallenges-site",
+        },
+    });
+    if (response.ok) {
+        const data = await response.json();
+        starCount = data.stargazers_count ?? 0;
+    }
+} catch {
+    starCount = 0;
+}
+
+const showStarCount = starCount > 50;
+
+// Format star count (e.g., 1234 -> 1.2k)
+const formatStarCount = (count: number): string => {
+    if (count >= 1000) {
+        return `${(count / 1000).toFixed(1)}k`;
+    }
+    return count.toString();
+};
 ---
 
-<header class="sticky top-0 z-50 flex items-center justify-center py-4">
-    <!-- Desktop menu -->
-    <div
-        class="border-border bg-content supports-backdrop-filter:bg-content/60 rounded-radius hidden h-16 w-fit border backdrop-blur-2xl md:flex"
-    >
-        <div
-            class="container flex h-full flex-row items-center justify-between gap-64 px-3.5"
-        >
-            <div
-                class="text-text-default flex h-full w-full items-center justify-center text-xl font-bold"
-            >
-                <a href="/">
-                    <Icon name="cloud" class="size-8 text-text-default" />
-                </a>
-            </div>
+<header
+    class="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur-sm supports-backdrop-filter:bg-background/60"
+>
+    <div class="container mx-auto flex h-14 max-w-6xl items-center px-4">
+        <!-- Left: Logo + Nav -->
+        <div class="flex items-center gap-6">
+            <a href="/" class="flex items-center gap-2">
+                <Icon name="cloud" class="size-6 text-foreground" />
+            </a>
 
-            <nav class="flex h-full w-full items-center justify-evenly gap-2">
-                {
-                    navItems.map((item) => {
-                        const isActive =
-                            pathname === item.href ||
-                            (item.href !== "/" &&
-                                pathname.startsWith(item.href));
-                        return (
-                            <Button
-                                href={item.href}
-                                target={item.blank ? "_blank" : "_self"}
-                                rel={
-                                    item.blank
-                                        ? "noopener noreferrer"
-                                        : undefined
-                                }
-                                variant={item.special ? "default" : "ghost"}
-                                size="default"
-                                class={`text-sm font-bold whitespace-nowrap ${
-                                    isActive ? "text-accent" : ""
-                                }`}
-                            >
-                                {item.label}
-                            </Button>
-                        );
-                    })
-                }
+            <nav class="hidden md:flex">
+                <NavMenu items={navItems} pathname={pathname} client:load />
             </nav>
+        </div>
+
+        <!-- Right: GitHub + Theme -->
+        <div class="ml-auto flex items-center gap-2">
+            <a
+                href={SITE.repo}
+                target="_blank"
+                rel="noopener noreferrer"
+                class={cn(
+                    buttonVariants({ variant: "ghost", size: "icon" }),
+                    "relative",
+                )}
+                aria-label="GitHub repository"
+            >
+                <Icon name="github" class="size-5" />
+                {
+                    showStarCount && (
+                        <span class="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[0.6rem] font-semibold text-primary-foreground">
+                            {formatStarCount(starCount)}
+                        </span>
+                    )
+                }
+            </a>
+            <ThemeToggle />
+
+            <!-- Mobile menu button -->
+            <button
+                id="mobile-menu-btn"
+                class={cn(
+                    buttonVariants({ variant: "ghost", size: "icon" }),
+                    "md:hidden",
+                )}
+                aria-expanded="false"
+                aria-controls="mobile-menu"
+            >
+                <Icon id="menu-icon" name="menu" class="size-5" />
+            </button>
         </div>
     </div>
 
     <!-- Mobile menu -->
-    <div id="mobile-menu-container" class="relative mx-4 w-full md:hidden">
-        <div
-            class="border-border bg-content supports-backdrop-filter:bg-content/60 rounded-radius flex h-16 items-center justify-between border px-4 backdrop-blur-2xl"
-        >
-            <div
-                class="text-text-default flex h-full items-center justify-center text-lg font-bold"
-            >
-                <Icon name="cloud" class="size-8 text-text-default" />
-            </div>
-            <button id="mobile-menu-btn" class="text-text-default">
-                <Icon id="menu-icon" name="menu" class="size-6" />
-            </button>
-        </div>
-
-        <nav
-            id="mobile-menu"
-            class="rounded-radius border-border bg-content/80 supports-backdrop-filter:bg-content/50 absolute top-20 right-0 left-0 z-40 hidden max-h-[calc(100vh-7rem)] flex-col items-center justify-center gap-4 overflow-y-auto border p-4 backdrop-blur-2xl"
-        >
+    <nav
+        id="mobile-menu"
+        class="hidden border-t border-border/40 bg-background px-4 py-3 md:hidden"
+    >
+        <div class="flex flex-col gap-1">
             {
                 navItems.map((item) => {
                     const isActive =
@@ -82,17 +105,21 @@ const pathname = new URL(Astro.request.url).pathname;
                         <a
                             href={item.href}
                             target={item.blank ? "_blank" : "_self"}
-                            class={`py-2 text-sm font-bold ${
-                                isActive ? "text-accent" : "text-text-subtle"
-                            }`}
+                            rel={item.blank ? "noopener noreferrer" : undefined}
+                            class={cn(
+                                "rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                                isActive
+                                    ? "bg-accent text-accent-foreground"
+                                    : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
+                            )}
                         >
                             {item.label}
                         </a>
                     );
                 })
             }
-        </nav>
-    </div>
+        </div>
+    </nav>
 </header>
 
 <script>
@@ -102,7 +129,11 @@ const pathname = new URL(Astro.request.url).pathname;
 
         menuBtn?.addEventListener("click", () => {
             mobileMenu?.classList.toggle("hidden");
-            mobileMenu?.classList.toggle("flex");
+            const isExpanded = !mobileMenu?.classList.contains("hidden");
+            menuBtn.setAttribute(
+                "aria-expanded",
+                isExpanded ? "true" : "false",
+            );
         });
     });
 </script>

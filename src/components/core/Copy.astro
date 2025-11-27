@@ -1,6 +1,7 @@
 ---
 import { Icon } from "astro-icon/components";
-import Button from "@/components/ui/Button.astro";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 ---
 
 <style is:global>
@@ -21,29 +22,30 @@ import Button from "@/components/ui/Button.astro";
         right: 0.5rem;
         z-index: 100;
         transition: all 0.2s;
-        color: var(--text-faint);
+        @apply text-muted-foreground;
     }
 
     .code-buttons button:hover {
-        color: var(--text-default);
+        @apply text-foreground;
     }
 
     .code-buttons button.clicked {
-        @apply text-accent;
+        @apply text-accent-foreground;
     }
 </style>
 
 <template id="copyButtonTemplate">
-    <Button
-        class="relative top-4 right-2 z-50 opacity-30 hover:opacity-100"
-        size="icon"
-        variant="ghost"
+    <button
+        class={cn(
+            buttonVariants({ variant: "ghost", size: "icon" }),
+            "relative top-4 right-2 z-50 opacity-30 hover:opacity-100",
+        )}
     >
         <Icon
             name="copy"
             class="h-6 w-6 lg:h-5 lg:w-5 transition-transform duration-300 ease-in-out"
         />
-    </Button>
+    </button>
 </template>
 
 <script>

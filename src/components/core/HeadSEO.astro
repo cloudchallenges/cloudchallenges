@@ -86,4 +86,16 @@ if (typeof image === "object" && "src" in image) {
 
 <link rel="stylesheet" href="https://cdn.plyr.io/3.8.3/plyr.css" />
 
+<!-- Theme initialization script (inline to prevent flash) -->
+<script is:inline>
+    (function () {
+        const theme = localStorage.getItem("theme") || "dark";
+        if (theme === "dark") {
+            document.documentElement.classList.add("dark");
+        } else {
+            document.documentElement.classList.remove("dark");
+        }
+    })();
+</script>
+
 <ClientRouter />
