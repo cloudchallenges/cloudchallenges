@@ -44,7 +44,7 @@
     --text-faint: oklch(0.556 0 0);
     --red: oklch(0.577 0.245 27.325);
     --blue: oklch(0.6 0.2 240);
-    --astro-code-background: var(--content);
+    --astro-code-background: var(--secondary);
     --astro-code-foreground: var(--text-default);
     --astro-code-token-constant: var(--pink);
     --astro-code-token-string: var(--green);
@@ -97,7 +97,7 @@
     --text-faint: oklch(0.708 0 0);
     --red: oklch(0.704 0.191 22.216);
     --blue: oklch(0.7 0.2 240);
-    --astro-code-background: var(--popover);
+    --astro-code-background: var(--secondary);
     --astro-code-foreground: var(--text-default);
     --astro-code-token-constant: var(--pink);
     --astro-code-token-string: var(--green);
@@ -155,7 +155,7 @@
 
 @layer base {
     * {
-        @apply border-border;
+        @apply border-border box-border scroll-smooth;
     }
 
     body {
