@@ -1,0 +1,170 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import TableOfContents from "@/components/core/TableOfContents.astro";
+import {
+    Breadcrumb,
+    BreadcrumbList,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import type { ChallengeEntry } from "@/lib/types";
+
+interface Props {
+    entry: ChallengeEntry;
+    activeTab?: "challenge" | "solution";
+    headings?: Array<{ depth: number; text: string; slug: string }>;
+}
+
+const { entry, activeTab = "challenge", headings = [] } = Astro.props;
+const { data } = entry;
+
+const title = data.title ?? entry.id;
+const levelLabel = data.level
+    ? `${data.level[0].toUpperCase()}${data.level.slice(1)}`
+    : null;
+
+const summaryText = data.summary?.trim();
+const providers = data.providers ?? [];
+const services = data.services ?? [];
+const tags = data.tags ?? [];
+
+const seoDescription =
+    summaryText ??
+    `Take a ${data.level ?? "cloud"} challenge and sharpen your skills.`;
+
+const challengeUrl = `/challenge/${entry.id}`;
+const solutionUrl = `/challenge/${entry.id}/solution`;
+---
+
+<BaseLayout title={title} description={seoDescription} contentType="article">
+    <div class="mx-auto w-full max-w-6xl">
+        <article class="w-full max-w-6xl">
+            <!-- Header -->
+            <header class="mb-8 space-y-4">
+                <!-- Breadcrumb -->
+                <Breadcrumb class="mb-2">
+                    <BreadcrumbList>
+                        <BreadcrumbItem>
+                            <BreadcrumbLink href="/challenge"
+                                >Challenges</BreadcrumbLink
+                            >
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                            <BreadcrumbPage>{title}</BreadcrumbPage>
+                        </BreadcrumbItem>
+                    </BreadcrumbList>
+                </Breadcrumb>
+
+                <!-- Title -->
+                <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">
+                    {title}
+                </h1>
+
+                <!-- Summary -->
+                {
+                    summaryText && (
+                        <p class="text-lg text-muted-foreground">
+                            {summaryText}
+                        </p>
+                    )
+                }
+
+                <!-- Meta badges -->
+                <div class="flex flex-wrap items-center gap-2">
+                    {
+                        levelLabel && (
+                            <Badge variant="default" className="text-xs">
+                                {levelLabel}
+                            </Badge>
+                        )
+                    }
+                    {
+                        providers.map((provider) => (
+                            <Badge
+                                variant="secondary"
+                                className="text-xs uppercase tracking-wide"
+                            >
+                                {provider}
+                            </Badge>
+                        ))
+                    }
+                    {
+                        services.map((service) => (
+                            <Badge variant="outline" className="text-xs">
+                                {service}
+                            </Badge>
+                        ))
+                    }
+                </div>
+
+                <!-- Tags -->
+                {
+                    tags.length > 0 && (
+                        <div class="flex flex-wrap gap-1.5">
+                            {tags.map((tag) => (
+                                <span class="text-xs text-muted-foreground">
+                                    #{tag}
+                                </span>
+                            ))}
+                        </div>
+                    )
+                }
+            </header>
+
+            <!-- Tab Navigation -->
+            <nav class="mb-6" aria-label="Content tabs">
+                <div
+                    class="inline-flex rounded-lg bg-muted p-1"
+                    role="tablist"
+                    aria-label="Challenge content"
+                >
+                    <a
+                        href={challengeUrl}
+                        role="tab"
+                        aria-selected={activeTab === "challenge"}
+                        class:list={[
+                            "rounded-md px-4 py-2 text-sm font-medium transition-colors",
+                            activeTab === "challenge"
+                                ? "bg-background text-foreground shadow-sm"
+                                : "text-muted-foreground hover:text-foreground",
+                        ]}
+                    >
+                        Challenge
+                    </a>
+                    <a
+                        href={solutionUrl}
+                        role="tab"
+                        aria-selected={activeTab === "solution"}
+                        class:list={[
+                            "rounded-md px-4 py-2 text-sm font-medium transition-colors",
+                            activeTab === "solution"
+                                ? "bg-background text-foreground shadow-sm"
+                                : "text-muted-foreground hover:text-foreground",
+                        ]}
+                    >
+                        Solution
+                    </a>
+                </div>
+            </nav>
+
+            <Separator className="mb-8" />
+
+            <!-- Content -->
+            <div class="flex flex-col lg:flex-row gap-4 w-full max-w-6xl">
+                <div class="w-3/4">
+                    <div class="prose prose-neutral dark:prose-invert">
+                        <slot />
+                    </div>
+                </div>
+                <div class="w-1/4">
+                    <TableOfContents headings={headings} />
+                </div>
+            </div>
+        </article>
+    </div>
+</BaseLayout>

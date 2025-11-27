@@ -27,4 +27,5 @@
         "editor.defaultFormatter": "redhat.vscode-yaml"
     },
     "css.lint.unknownAtRules": "ignore",
+    // "tailwindCSS.lint.suggestCanonicalClasses": "ignore"
 }

@@ -1,0 +1,22 @@
+---
+import { Button } from "@/components/ui/button";
+import { Icon } from "astro-icon/components";
+
+const { challengeUrl } = Astro.props;
+---
+
+<div class="w-full py-16">
+    <div class="flex flex-col items-center justify-center text-center">
+        <h2 class="mb-2 text-xl font-semibold">Solution Coming Soon</h2>
+        <p class="mb-6 max-w-md text-muted-foreground">
+            We're working on creating a comprehensive solution for this
+            challenge. Check back soon or try solving it yourself first!
+        </p>
+        <a href={challengeUrl}>
+            <Button variant="outline">
+                <Icon name="arrow-right" class="size-5 rotate-180" />
+                Back to Challenge
+            </Button>
+        </a>
+    </div>
+</div>

@@ -1,0 +1,114 @@
+---
+import { getCollection } from "astro:content";
+import type { ChallengeEntry } from "@/lib/types";
+
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { ChallengeList } from "@/components/challenge/ChallengeList";
+import { Badge } from "@/components/ui/badge";
+import { Icon } from "astro-icon/components";
+
+const challengeEntries: ChallengeEntry[] = await getCollection("challenges");
+
+// Transform challenges into the format expected by the React component
+const challenges = challengeEntries.map((entry) => ({
+    id: entry.id,
+    title: entry.data.title,
+    summary: entry.data.summary,
+    level: entry.data.level,
+    duration_hours: entry.data.duration_hours,
+    providers: entry.data.providers,
+    services: entry.data.services,
+    tags: entry.data.tags,
+    created_at: entry.data.created_at?.toISOString(),
+}));
+
+// Extract unique filter values
+const allProviders = [
+    ...new Set(challengeEntries.flatMap((c) => c.data.providers)),
+].sort();
+const allServices = [
+    ...new Set(challengeEntries.flatMap((c) => c.data.services)),
+].sort();
+const allTags = [
+    ...new Set(challengeEntries.flatMap((c) => c.data.tags)),
+].sort();
+const allLevels = [
+    ...new Set(challengeEntries.map((c) => c.data.level).filter(Boolean)),
+] as string[];
+
+// Sort levels by difficulty order
+const levelOrder = ["beginner", "easy", "intermediate", "advanced", "expert"];
+allLevels.sort((a, b) => levelOrder.indexOf(a) - levelOrder.indexOf(b));
+---
+
+<BaseLayout>
+    <section class="space-y-8">
+        <!-- Header section with inspiration from FeaturedChallenge -->
+        <div
+            class="relative overflow-hidden rounded-xl border bg-card p-8 shadow-sm md:p-10"
+        >
+            <!-- Decorative background pattern -->
+            <div
+                class="absolute inset-0 bg-[linear-gradient(45deg,transparent_48%,var(--border)_49%,var(--border)_51%,transparent_52%)] bg-size-[8px_8px] opacity-20"
+                aria-hidden="true"
+            >
+            </div>
+
+            <div class="relative">
+                <Badge
+                    variant="secondary"
+                    className="mb-4 w-fit rounded-full px-3 py-1 text-[0.6rem] font-semibold uppercase tracking-[0.35em]"
+                >
+                    Challenges
+                </Badge>
+                <h1
+                    class="mb-3 text-3xl font-bold tracking-tight text-foreground md:text-4xl"
+                >
+                    Cloud Challenges
+                </h1>
+                <p
+                    class="max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg"
+                >
+                    Browse real-world cloud engineering problems. Each challenge
+                    includes a detailed problem statement, starter code, and
+                    validation checklists. You own and deploy everything in your
+                    own cloud account.
+                </p>
+
+                <!-- Quick stats -->
+                <div
+                    class="mt-6 flex flex-wrap items-center gap-6 text-sm text-muted-foreground"
+                >
+                    <div class="flex items-center gap-2">
+                        <Icon name="file-text" class="size-4" />
+                        <span
+                            ><strong class="text-foreground">
+                                {challenges.length}
+                            </strong> challenges
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <Icon name="cloud" class="size-4" />
+                        <span>
+                            <strong class="text-foreground">
+                                {allProviders.length}
+                            </strong> cloud provider{
+                                allProviders.length > 1 && "s"
+                            }
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filterable challenge list -->
+        <ChallengeList
+            client:load
+            challenges={challenges}
+            allProviders={allProviders}
+            allServices={allServices}
+            allTags={allTags}
+            allLevels={allLevels}
+        />
+    </section>
+</BaseLayout>

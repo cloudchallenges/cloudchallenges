@@ -1,0 +1,129 @@
+---
+import { DotPattern } from "@/components/backgrounds/DotPattern";
+---
+
+<section class="relative overflow-hidden py-16 md:py-24">
+    <!-- Subtle dot pattern background -->
+    <DotPattern
+        client:visible
+        width={20}
+        height={20}
+        cr={1.2}
+        className="fill-neutral-400/30 dark:fill-neutral-500/20 mask-[radial-gradient(ellipse_at_center,white,transparent_70%)]"
+    />
+
+    <div class="container relative mx-auto px-4">
+        <!-- Main heading and subhead -->
+        <div class="mx-auto mb-12 max-w-3xl text-center">
+            <h2 class="mb-4 text-3xl font-bold tracking-tight md:text-4xl">
+                Real problems. Build real solutions.
+            </h2>
+            <p class="text-lg text-muted-foreground md:text-xl">
+                We give you practical, cloud-native DevOps problems. No sandbox
+                environments. No hand-holding. Fork the repo, sign up for your
+                own cloud account, and own everything you build.
+            </p>
+        </div>
+
+        <!-- Three pillars -->
+        <div class="mx-auto grid max-w-5xl gap-6 md:grid-cols-3">
+            <!-- Problem-first -->
+            <div
+                class="group rounded-lg border bg-card p-6 transition-colors hover:bg-accent/50"
+            >
+                <div
+                    class="mb-3 flex h-10 w-10 items-center justify-center rounded-md bg-primary/10"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="h-5 w-5 text-primary"
+                        aria-hidden="true"
+                    >
+                        <path d="M12 22v-4"></path>
+                        <path d="M9 8V2"></path>
+                        <path d="M15 8V2"></path>
+                        <path
+                            d="M18 8v4a6 6 0 0 1-6 6 6 6 0 0 1-6-6V8a6 6 0 0 1 6-6 6 6 0 0 1 6 6"
+                        ></path>
+                    </svg>
+                </div>
+                <h3 class="mb-2 font-semibold">Problem-first</h3>
+                <p class="text-sm text-muted-foreground">
+                    Real engineering prompts that mimic production trade-offs.
+                </p>
+            </div>
+
+            <!-- Cloud-native -->
+            <div
+                class="group rounded-lg border bg-card p-6 transition-colors hover:bg-accent/50"
+            >
+                <div
+                    class="mb-3 flex h-10 w-10 items-center justify-center rounded-md bg-primary/10"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="h-5 w-5 text-primary"
+                        aria-hidden="true"
+                    >
+                        <path
+                            d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"
+                        ></path>
+                    </svg>
+                </div>
+                <h3 class="mb-2 font-semibold">Cloud-native</h3>
+                <p class="text-sm text-muted-foreground">
+                    Focused on provider-managed services and IaC patterns.
+                </p>
+            </div>
+
+            <!-- Portfolio-ready -->
+            <div
+                class="group rounded-lg border bg-card p-6 transition-colors hover:bg-accent/50"
+            >
+                <div
+                    class="mb-3 flex h-10 w-10 items-center justify-center rounded-md bg-primary/10"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="h-5 w-5 text-primary"
+                        aria-hidden="true"
+                    >
+                        <rect width="20" height="14" x="2" y="7" rx="2" ry="2"
+                        ></rect>
+                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"
+                        ></path>
+                    </svg>
+                </div>
+                <h3 class="mb-2 font-semibold">Portfolio-ready</h3>
+                <p class="text-sm text-muted-foreground">
+                    Build shareable projects you can demo and discuss in
+                    interviews.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>

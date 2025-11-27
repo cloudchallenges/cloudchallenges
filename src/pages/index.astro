@@ -1,12 +1,22 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import HeroSection from "@/components/home/HeroSection.astro";
+import ConceptBlock from "@/components/home/ConceptBlock.astro";
+import InspirationBlock from "@/components/home/InspirationBlock.astro";
+import HowItWorks from "@/components/home/HowItWorks.astro";
+import ContributionSection from "@/components/home/ContributionSection.astro";
+
+const pageTitle = "Cloud Challenges - Real problems. Build real solutions.";
+const pageDescription =
+    "Practical, cloud-native DevOps challenges that go beyond tutorials. Design, implement, and validate your own solutions using real-world constraints.";
 ---
 
-<BaseLayout>
-  <h1 class="font-bold text-3xl">
-    Checkout my projects:
-    <a href="http://hyperoot.dev" target="_blank" class="text-blue-400">
-      hyperoot.dev
-    </a>
-  </h1>
+<BaseLayout title={pageTitle} description={pageDescription} fullWidth={true}>
+    <HeroSection />
+    <ConceptBlock />
+    <InspirationBlock />
+    <div id="how-it-works">
+        <HowItWorks />
+    </div>
+    <ContributionSection />
 </BaseLayout>

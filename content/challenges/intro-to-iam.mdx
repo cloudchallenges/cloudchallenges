@@ -1,0 +1,55 @@
+---
+title: "Intro to AWS IAM"
+uid: "iam-001"
+providers:
+  - aws
+services:
+  - iam
+  - s3
+tags:
+  - security
+  - aws
+level: beginner
+duration_hours: 1.5
+starter_repo: "https://github.com/cloudchallenges/iam-starter"
+summary: "Learn the basics of AWS IAM by creating users, groups, and policies."
+created_at: "2025-11-21"
+coverAlt: "AWS IAM console screenshot"
+---
+import setupGraphic from "@/assets/setup.png";
+import { Image } from "astro:assets";
+
+<Image src={setupGraphic} alt="Project setup hero" />
+
+This short challenge introduces AWS Identity and Access Management (IAM). You'll create a user, a group, and attach a simple policy.
+
+## Objectives
+
+- Create an IAM user
+- Create an IAM group
+- Attach a managed policy to the group
+- Add the user to the group
+
+## Steps
+
+1. Open the AWS Console and navigate to IAM.
+2. Create a new group called `developers`.
+3. Create a new user called `challenge-user` with programmatic access.
+4. Attach the managed policy `AmazonS3ReadOnlyAccess` to the `developers` group.
+5. Add `challenge-user` to the `developers` group.
+
+## Quick CLI example
+
+Use the AWS CLI to create a user and add it to a group:
+
+```bash
+aws iam create-user --user-name challenge-user
+aws iam create-group --group-name developers
+aws iam attach-group-policy --group-name developers --policy-arn arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
+aws iam add-user-to-group --user-name challenge-user --group-name developers
+```
+
+## Notes
+
+- This challenge is safe to complete in your own AWS account. Be sure to clean up resources when finished.
+- For an automated starter, see the `starter_repo` link in the frontmatter.
