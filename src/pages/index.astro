@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/card";
 import setupGraphic from "@/assets/setup.png";
 import { Image } from "astro:assets";
-import { Code } from "astro:components";
 ---
 
 <BaseLayout>
@@ -24,13 +23,6 @@ import { Code } from "astro:components";
             </CardHeader>
             <CardContent>
                 <Image src={setupGraphic} alt="Project setup hero" />
-            </CardContent>
-            <CardContent>
-                <Code
-                    code={`const foo = 'bar';`}
-                    lang="js"
-                    class="rounded-lg"
-                />
             </CardContent>
         </Card>
     </section>

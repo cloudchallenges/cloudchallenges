@@ -37,6 +37,24 @@
     --sidebar-accent-foreground: oklch(0.205 0 0);
     --sidebar-border: oklch(0.922 0 0);
     --sidebar-ring: oklch(0.708 0 0);
+    --content: oklch(1 0 0);
+    --text-default: oklch(0.145 0 0);
+    --pink: oklch(0.7 0.2 350);
+    --green: oklch(0.7 0.2 140);
+    --text-faint: oklch(0.556 0 0);
+    --red: oklch(0.577 0.245 27.325);
+    --blue: oklch(0.6 0.2 240);
+    --astro-code-background: var(--content);
+    --astro-code-foreground: var(--text-default);
+    --astro-code-token-constant: var(--pink);
+    --astro-code-token-string: var(--green);
+    --astro-code-token-comment: var(--text-faint);
+    --astro-code-token-keyword: var(--pink);
+    --astro-code-token-parameter: var(--red);
+    --astro-code-token-function: var(--blue);
+    --astro-code-token-string-expression: var(--green);
+    --astro-code-token-punctuation: var(--red);
+    --astro-code-token-link: var(--green);
 }
 
 .dark {
@@ -72,6 +90,24 @@
     --sidebar-accent-foreground: oklch(0.985 0 0);
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.439 0 0);
+    --content: oklch(0.145 0 0);
+    --text-default: oklch(0.985 0 0);
+    --pink: oklch(0.8 0.2 350);
+    --green: oklch(0.8 0.2 140);
+    --text-faint: oklch(0.708 0 0);
+    --red: oklch(0.704 0.191 22.216);
+    --blue: oklch(0.7 0.2 240);
+    --astro-code-background: var(--content);
+    --astro-code-foreground: var(--text-default);
+    --astro-code-token-constant: var(--pink);
+    --astro-code-token-string: var(--green);
+    --astro-code-token-comment: var(--text-faint);
+    --astro-code-token-keyword: var(--pink);
+    --astro-code-token-parameter: var(--red);
+    --astro-code-token-function: var(--blue);
+    --astro-code-token-string-expression: var(--green);
+    --astro-code-token-punctuation: var(--red);
+    --astro-code-token-link: var(--green);
 }
 
 @theme inline {
