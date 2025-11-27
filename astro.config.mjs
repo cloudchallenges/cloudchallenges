@@ -5,6 +5,8 @@ import { defineConfig } from "astro/config";
 import icon from "astro-icon";
 import AutoImport from "astro-auto-import";
 
+import react from "@astrojs/react";
+
 export default defineConfig({
     //   site: "https://cloudchallenges.hyperoot.dev",
     prefetch: true,
@@ -19,13 +21,9 @@ export default defineConfig({
             defaultColor: false,
         },
     },
-    integrations: [
-        AutoImport({
-            imports: ["./src/components/core/Video.astro"],
-        }),
-        mdx(),
-        icon({
-            iconDir: "src/assets/icons",
-        }),
-    ],
+    integrations: [AutoImport({
+        imports: ["./src/components/core/Video.astro"],
+    }), mdx(), icon({
+        iconDir: "src/assets/icons",
+    }), react()],
 });
