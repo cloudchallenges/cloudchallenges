@@ -23,8 +23,5 @@
     },
     "forwardPorts": [
         4321
-    ],
-    "mounts": [
-        "source=${localEnv:HOME}/.gitconfig,target=/home/vscode/.gitconfig,type=bind,consistency=cached"
     ]
 }
