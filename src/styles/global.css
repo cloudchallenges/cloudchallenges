@@ -268,3 +268,7 @@
 .prose iframe {
     @apply aspect-video h-auto w-full;
 }
+
+.prose svg {
+    @apply my-4 rounded-lg;
+}
