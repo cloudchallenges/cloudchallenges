@@ -60,7 +60,7 @@ export function ImagePreview({ src, alt, className }: ImagePreviewProps) {
                 alt={alt}
                 onClick={handleOpen}
                 className={cn(
-                    "cursor-zoom-in transition-transform hover:scale-[1.02]",
+                    "cursor-zoom-in",
                     className
                 )}
                 role="button"
