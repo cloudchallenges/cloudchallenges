@@ -156,14 +156,18 @@ const solutionUrl = `/challenge/${entry.id}/solution`;
 
             <!-- Content -->
             <div class="flex flex-col lg:flex-row gap-4 w-full max-w-6xl">
-                <div class="w-3/4">
+                <div class:list={["w-full", headings.length > 0 && "lg:w-3/4"]}>
                     <div class="prose prose-neutral dark:prose-invert">
                         <slot />
                     </div>
                 </div>
-                <div class="w-1/4">
-                    <TableOfContents headings={headings} />
-                </div>
+                {
+                    headings.length > 0 && (
+                        <div class="w-full lg:w-1/4">
+                            <TableOfContents headings={headings} />
+                        </div>
+                    )
+                }
             </div>
         </article>
     </div>
