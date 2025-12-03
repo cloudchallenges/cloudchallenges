@@ -2,7 +2,7 @@
     "name": "cloudchallenges",
     "type": "module",
     "version": "0.0.1",
-    "packageManager": "pnpm@10",
+    "packageManager": "pnpm@10.24.0",
     "scripts": {
         "dev": "astro dev",
         "build": "astro build",
@@ -22,7 +22,7 @@
         "@radix-ui/react-slot": "^1.2.4",
         "@radix-ui/react-tabs": "^1.1.13",
         "@radix-ui/react-toggle": "^1.1.10",
-        "@radix-ui/react-toggle-group": "^1.1.11",
+        "@radix-ui/react-visually-hidden": "^1.2.4",
         "@tailwindcss/vite": "^4.1.16",
         "astro": "^5.15.2",
         "astro-auto-import": "^0.4.5",
