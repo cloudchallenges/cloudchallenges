@@ -78,17 +78,22 @@ export function ChallengeFilters({
     };
 
     // Apply filters whenever selection changes
+    // Uses intersection logic: challenge must match ALL selected filters within each category
     React.useEffect(() => {
         const filtered = challenges.filter((challenge) => {
+            // For providers: challenge must include ALL selected providers
             const matchesProvider =
                 selectedProviders.length === 0 ||
-                selectedProviders.some((p) => challenge.providers.includes(p));
+                selectedProviders.every((p) => challenge.providers.includes(p));
+            // For services: challenge must include ALL selected services
             const matchesService =
                 selectedServices.length === 0 ||
-                selectedServices.some((s) => challenge.services.includes(s));
+                selectedServices.every((s) => challenge.services.includes(s));
+            // For tags: challenge must include ALL selected tags
             const matchesTag =
                 selectedTags.length === 0 ||
-                selectedTags.some((t) => challenge.tags.includes(t));
+                selectedTags.every((t) => challenge.tags.includes(t));
+            // For levels: challenge level must be one of the selected levels (OR logic makes sense here)
             const matchesLevel =
                 selectedLevels.length === 0 ||
                 (challenge.level && selectedLevels.includes(challenge.level));

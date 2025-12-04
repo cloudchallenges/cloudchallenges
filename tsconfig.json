@@ -1,27 +1,27 @@
 {
-  "extends": "astro/tsconfigs/strict",
-  "include": [
-    ".astro/types.d.ts",
-    "**/*"
-  ],
-  "exclude": [
-    "dist"
-  ],
-  "compilerOptions": {
-    "strictNullChecks": true,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@posts/*": [
-        "./content/posts/*"
-      ],
-      "@data/*": [
-        "./data/*"
-      ]
-    },
-    "jsx": "react-jsx",
-    "jsxImportSource": "react"
-  }
+    "extends": "astro/tsconfigs/strict",
+    "include": [
+        ".astro/types.d.ts",
+        "**/*"
+    ],
+    "exclude": [
+        "dist"
+    ],
+    "compilerOptions": {
+        "strictNullChecks": true,
+        "baseUrl": ".",
+        "paths": {
+            "@/*": [
+                "./src/*"
+            ],
+            "@challenges/*": [
+                "./content/challenges/*"
+            ],
+            "@data/*": [
+                "./data/*"
+            ]
+        },
+        "jsx": "react-jsx",
+        "jsxImportSource": "react"
+    }
 }

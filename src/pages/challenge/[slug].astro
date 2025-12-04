@@ -6,6 +6,7 @@ import type {
     ChallengeDetailPageProps,
 } from "@/lib/types";
 import ChallengeLayout from "@/layouts/ChallengeLayout.astro";
+import MdxImage from "@/components/media/MdxImage.astro";
 
 export async function getStaticPaths() {
     const entries = await getCollection("challenges");
@@ -19,8 +20,12 @@ export async function getStaticPaths() {
 }
 const { entry: challenge } = Astro.props as ChallengeDetailPageProps;
 const { Content, headings = [] } = await render(challenge);
+
+const components = {
+    img: MdxImage,
+};
 ---
 
 <ChallengeLayout entry={challenge} activeTab="challenge" headings={headings}>
-    <Content />
+    <Content components={components} />
 </ChallengeLayout>

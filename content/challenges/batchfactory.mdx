@@ -1,0 +1,231 @@
+---
+title: BatchFactory
+uid: batchfactory-aws
+summary: Build a serverless, event-driven pipeline that validates CSV uploads, converts records to JSON, stores outputs in S3, and exposes job metadata via a REST API.
+level: intermediate
+providers:
+  - aws
+services:
+  - S3
+  - SQS
+  - Lambda
+  - DynamoDB
+  - APIGateway
+  - CloudWatch
+tags:
+  - serverless
+  - event-driven
+  - etl
+  - terraform
+duration_hours: 3
+created_at: 2025-01-01
+cover: ./images/batchfactory.svg
+coverAlt: BatchFactory architecture diagram showing S3, SQS, Lambda, DynamoDB, and API Gateway integration
+---
+
+Build a serverless, event-driven pipeline that validates CSV uploads, converts records to JSON, stores outputs in S3, and exposes job metadata via a REST API.
+
+## Context
+
+CSV feeds remain central to partner integrations, billing systems, and vendor exports. Platform teams must ingest imperfect files, validate structure, transform to structured formats, and surface status for downstream systems - all with reliability and observability.
+
+## Architecture
+
+![Batch Factory Architecture Diagram](./images/batchfactory.svg)
+
+## Starter Pack
+
+Clone the starter repository to get sample files and any provided code:
+
+**Repository:** [github.com/HYP3R00T/batchfactory-starter](https://github.com/HYP3R00T/batchfactory-starter)
+
+### Contents
+
+- `samples/sample-small.csv` - Valid CSV for testing the happy path
+- `samples/sample-malformed.csv` - Contains invalid timestamps for failure testing
+
+## Inputs
+
+Your solution receives CSV files uploaded to an S3 bucket. The system treats this as a black box - you define what happens inside.
+
+### CSV File Requirements
+
+- **Encoding:** UTF-8
+- **Header:** Required (first row must contain column names)
+- **Required Columns:** `id`, `value`, `timestamp`
+- **Timestamp Format:** ISO8601 (`2025-01-01T00:00:00Z`) or Unix epoch (`1735689600`)
+- **Max File Size:** 1 MB
+- **Upload Location:** S3 bucket with `uploads/` prefix
+
+## Outputs
+
+Your solution must produce the following outputs for both success and failure scenarios.
+
+### On Successful Processing
+
+**S3 Output:**
+- Path: `processed/<jobId>/output.json`
+- Content: JSON array of valid records
+
+**DynamoDB Job Record:**
+- `jobId` (String) - Primary key, derived from the uploaded filename
+- `status` (String) - `COMPLETED`
+- `s3OutputPrefix` (String) - Path to processed output
+- `rowCount` (Number) - Total rows processed (valid + invalid)
+- `errorCount` (Number) - Count of rows with missing required values
+- `startedAt` (String) - ISO8601 timestamp when processing began
+- `finishedAt` (String) - ISO8601 timestamp when processing completed
+- `message` (String) - Human-readable status description
+
+### On Validation Failure
+
+**S3 Output:**
+- Path: `rejected/<jobId>/<original-filename>.csv`
+- Content: Original file moved from `uploads/`
+
+**DynamoDB Job Record:**
+- `jobId` (String) - Primary key
+- `status` (String) - `FAILED`
+- `startedAt` (String) - ISO8601 timestamp
+- `finishedAt` (String) - ISO8601 timestamp
+- `message` (String) - Error description explaining the failure
+
+### API Responses
+
+Your solution must expose a `GET /jobs/{id}` endpoint.
+
+**Success (200):**
+```json
+{
+  "jobId": "sample-small",
+  "status": "COMPLETED",
+  "s3OutputPrefix": "processed/sample-small/",
+  "rowCount": 3,
+  "errorCount": 0,
+  "startedAt": "2025-01-01T00:00:00Z",
+  "finishedAt": "2025-01-01T00:00:05Z",
+  "message": "Processed 3 rows"
+}
+```
+
+**Not Found (404):**
+```json
+{
+  "error": "Job not found",
+  "jobId": "nonexistent-id"
+}
+```
+
+**Bad Request (400):**
+```json
+{
+  "error": "Missing job ID"
+}
+```
+
+### Observability Outputs
+
+- CloudWatch alarm triggered when any Lambda function errors
+- CloudWatch alarm triggered when messages appear in the Dead Letter Queue
+
+## Constraints
+
+- No custom domains or paid third-party services
+- File size must not exceed 1 MB
+- IAM roles must follow least-privilege (no wildcard `*` permissions)
+- All infrastructure must be defined in Terraform
+- Use PAY_PER_REQUEST billing for DynamoDB (free-tier friendly)
+- Use SQS with a Dead Letter Queue for decoupling and retry handling
+
+## Self-Evaluation Checklist
+
+Use these questions to verify your solution. If you can answer "yes" to all, your implementation is complete.
+
+### File Upload & Validation
+
+- [ ] When I upload a valid CSV to `uploads/`, does the file get processed?
+- [ ] Does the validator check that columns `id`, `value`, and `timestamp` exist in the header?
+- [ ] Does the validator reject files with invalid timestamp formats?
+- [ ] Are rejected files moved to `rejected/<jobId>/`?
+- [ ] Is the original file removed from `uploads/` after processing?
+
+### JSON Output
+
+- [ ] Does `processed/<jobId>/output.json` contain a JSON array?
+- [ ] Are only rows with all required values included in the output?
+- [ ] Are rows with missing values excluded from the output but counted in `errorCount`?
+
+### Job Tracking
+
+- [ ] Is a DynamoDB record created when processing starts?
+- [ ] Does the record include all required attributes (`jobId`, `status`, `rowCount`, `errorCount`, `startedAt`, `finishedAt`, `message`, `s3OutputPrefix`)?
+- [ ] Is `status` set to `COMPLETED` on success and `FAILED` on validation failure?
+
+### API
+
+- [ ] Does `GET /jobs/{id}` return 200 with job data when the job exists?
+- [ ] Does `GET /jobs/{id}` return 404 with `{"error": "Job not found", "jobId": "..."}` when the job doesn't exist?
+- [ ] Does `GET /jobs/` (missing ID) return 400 with `{"error": "Missing job ID"}`?
+
+### Decoupling & Reliability
+
+- [ ] Is there an SQS queue between the validator and processor?
+- [ ] Is a Dead Letter Queue configured?
+- [ ] Do messages land in the DLQ after the configured max receive count?
+
+### Observability
+
+- [ ] Is there a CloudWatch alarm for Lambda errors?
+- [ ] Is there a CloudWatch alarm for DLQ messages?
+
+### Infrastructure
+
+- [ ] Is all infrastructure defined in Terraform?
+- [ ] Are IAM policies scoped to specific resources (no `*` wildcards)?
+
+## Test Scenarios
+
+Validate your solution against these scenarios:
+
+### Happy Path
+Upload `samples/sample-small.csv` to `uploads/`.
+- Job status becomes `COMPLETED`
+- JSON output exists at `processed/<jobId>/output.json`
+- `rowCount` equals total rows, `errorCount` equals `0`
+- API returns correct metadata
+
+### Malformed CSV
+Upload `samples/sample-malformed.csv` (contains invalid timestamps).
+- Job status becomes `FAILED`
+- File is moved to `rejected/<jobId>/`
+- No JSON output is created
+- API returns job with failure message
+
+### Partial Errors
+Upload a CSV where some rows are missing required field values.
+- Job status becomes `COMPLETED`
+- `rowCount` equals total rows (valid + invalid)
+- `errorCount` equals count of invalid rows
+- JSON output contains only valid rows
+
+### Missing Job
+Call `GET /jobs/nonexistent-id`.
+- API returns 404
+- Response body contains `{"error": "Job not found", "jobId": "nonexistent-id"}`
+
+### DLQ Behavior
+Force the processor Lambda to fail (e.g., by corrupting the S3 object).
+- After max retries, message appears in Dead Letter Queue
+- CloudWatch alarm triggers
+
+## Enhancements
+
+Optional extensions for advanced learners:
+
+- Step Functions for pipeline orchestration
+- Idempotency and exactly-once processing
+- X-Ray tracing for distributed debugging
+- KMS encryption for data at rest
+- CI/CD with GitHub Actions
+- CloudWatch Dashboard for metrics visualization
+

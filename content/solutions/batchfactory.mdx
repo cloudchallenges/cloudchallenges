@@ -1,0 +1,365 @@
+---
+title: BatchFactory Solution
+challenge_uid: batchfactory
+solution_repo: https://github.com/HYP3R00T/batchfactory-solution-aws
+tool: terraform
+status: complete
+created_at: 2025-01-01
+cover: ./images/batchfactory.svg
+coverAlt: BatchFactory solution architecture diagram showing the complete AWS serverless pipeline
+---
+
+# BatchFactory Solution
+
+This document explains how the BatchFactory challenge was solved, covering architecture decisions, implementation details, and trade-offs.
+
+## Solution Overview
+
+The solution implements a serverless, event-driven CSV processing pipeline using AWS services. Files uploaded to S3 trigger a validation Lambda, which queues valid files to SQS for processing. A processor Lambda converts CSV to JSON and stores results in S3. Job metadata is tracked in DynamoDB and exposed via an HTTP API.
+
+## Architecture
+
+![Batch Factory Architecture Diagram](./images/batchfactory.svg)
+
+## Project Structure
+
+```shell
+├── src/
+│   ├── validator/handler.py      # Validates CSV structure
+│   ├── processor/handler.py      # Converts CSV to JSON
+│   └── api_reader/handler.py     # Serves job status via API
+├── terraform/
+│   ├── environments/dev/         # Dev environment configuration
+│   │   ├── main.tf               # Resource definitions
+│   │   ├── variables.tf          # Input variables
+│   │   └── output.tf             # Output values
+│   └── modules/                  # Reusable Terraform modules
+│       ├── s3/
+│       ├── sqs/
+│       ├── lambda/
+│       ├── dynamodb/
+│       ├── apigateway/
+│       └── cloudwatch/
+├── samples/                      # Test CSV files
+└── scripts/                      # Build and deployment scripts
+```
+
+## Components
+
+### Validator Lambda
+
+**Purpose:** Validates uploaded CSV files and queues valid ones for processing.
+
+**Trigger:** S3 event notification on `uploads/*.csv`
+
+**Logic:**
+1. Extract bucket and key from S3 event
+2. Create job record in DynamoDB with status `VALIDATING`
+3. Read CSV file from S3
+4. Check required columns exist (`id`, `value`, `timestamp`)
+5. Validate timestamp format in all rows (ISO8601 or Unix epoch)
+6. If valid: send message to SQS, update status to `PENDING`
+7. If invalid: move file to `rejected/`, update status to `FAILED`
+
+**Key Code:**
+
+```python
+# Timestamp validation regex
+ISO8601_PATTERN = re.compile(
+    r"^\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:?\d{2})?$"
+)
+EPOCH_PATTERN = re.compile(r"^\d{10,13}$")
+
+def is_valid_timestamp(value):
+    if not value:
+        return False
+    value = value.strip()
+    return bool(ISO8601_PATTERN.match(value) or EPOCH_PATTERN.match(value))
+```
+
+**IAM Permissions:**
+- `s3:GetObject`, `s3:PutObject`, `s3:DeleteObject` on bucket
+- `sqs:SendMessage` on processing queue
+- `dynamodb:PutItem`, `dynamodb:UpdateItem` on jobs table
+- CloudWatch Logs
+
+### Processor Lambda
+
+**Purpose:** Converts validated CSV files to JSON and stores output.
+
+**Trigger:** SQS message from validator
+
+**Logic:**
+1. Parse SQS message for job ID, bucket, and key
+2. Update job status to `PROCESSING`
+3. Read CSV from S3
+4. For each row, check if all required fields have values
+5. Valid rows go to output array, invalid rows increment error count
+6. Write JSON to `processed/<jobId>/output.json`
+7. Update job record with `rowCount`, `errorCount`, `s3OutputPrefix`, status `COMPLETED`
+
+**Key Code:**
+
+```python
+for row in reader:
+    if all(row.get(col) for col in REQUIRED_COLUMNS):
+        records.append({
+            "id": row["id"],
+            "value": row["value"],
+            "timestamp": row["timestamp"]
+        })
+    else:
+        error_count += 1
+```
+
+**IAM Permissions:**
+- `s3:GetObject`, `s3:PutObject` on bucket
+- `sqs:ReceiveMessage`, `sqs:DeleteMessage`, `sqs:GetQueueAttributes` on queue
+- `dynamodb:UpdateItem` on jobs table
+- CloudWatch Logs
+
+### API Reader Lambda
+
+**Purpose:** Returns job status from DynamoDB via HTTP API.
+
+**Trigger:** API Gateway `GET /jobs/{id}`
+
+**Logic:**
+1. Extract job ID from path parameters
+2. Return 400 if ID is missing
+3. Query DynamoDB for job record
+4. Return 404 if not found
+5. Return 200 with job data
+
+**Key Code:**
+
+```python
+class DecimalEncoder(json.JSONEncoder):
+    """Converts DynamoDB Decimal to int/float for JSON."""
+    def default(self, obj):
+        if isinstance(obj, Decimal):
+            if obj % 1 == 0:
+                return int(obj)
+            return float(obj)
+        return super().default(obj)
+```
+
+**IAM Permissions:**
+- `dynamodb:GetItem` on jobs table
+- CloudWatch Logs
+
+### SQS Queue
+
+**Configuration:**
+- Visibility timeout: 300 seconds (matches processor Lambda timeout)
+- Max receive count: 3 (before moving to DLQ)
+- Dead Letter Queue configured for failed messages
+
+### DynamoDB Table
+
+**Configuration:**
+- Billing: PAY_PER_REQUEST (on-demand, free-tier friendly)
+- Partition key: `jobId` (String)
+- TTL enabled on `ttlEpoch` attribute (optional cleanup)
+
+### CloudWatch Alarms
+
+Two alarms configured:
+1. **Lambda Errors** - Triggers when any Lambda function has errors
+2. **DLQ Messages** - Triggers when messages appear in Dead Letter Queue
+
+## Infrastructure
+
+### Terraform Modules
+
+Each AWS service has a dedicated module for reusability:
+
+**s3 module:**
+- Creates bucket with public access blocked
+- Supports force_destroy for dev environments
+
+**sqs module:**
+- Creates main queue and DLQ
+- Configures redrive policy
+
+**lambda module:**
+- Creates function with configurable runtime, memory, timeout
+- Supports environment variables
+
+**dynamodb module:**
+- Creates table with on-demand billing
+- Optional TTL configuration
+
+**apigateway module:**
+- Creates HTTP API (v2)
+- Configures Lambda integration and route
+
+**cloudwatch module:**
+- Creates error alarms for Lambda functions
+- Creates DLQ alarm
+
+### IAM Strategy
+
+Each Lambda has its own role with least-privilege permissions:
+
+| Lambda | S3 | SQS | DynamoDB |
+|--------|-----|-----|----------|
+| Validator | Get, Put, Delete | Send | Put, Update |
+| Processor | Get, Put | Receive, Delete | Update |
+| API Reader | - | - | Get |
+
+No wildcard (`*`) permissions are used. All policies reference specific resource ARNs.
+
+## Trade-offs
+
+### Job ID from Filename
+
+**Decision:** Use the uploaded filename (without extension) as the job ID.
+
+**Pros:**
+- Simple, predictable, human-readable
+- Easy to correlate files with jobs
+- No need for UUID generation
+
+**Cons:**
+- Duplicate filenames overwrite job records
+- Special characters in filenames could cause issues
+
+**Mitigation:** For production, consider prepending a timestamp or UUID.
+
+### Validation Scope
+
+**Decision:** Validate all rows for timestamp format.
+
+**Pros:**
+- Thorough validation catches all invalid timestamps
+- No bad data passes through to processing
+
+**Cons:**
+- Slower validation for large files
+- Higher Lambda execution time
+
+**Mitigation:** For very large files, consider streaming validation or increased Lambda timeout.
+
+### Single SQS Message per File
+
+**Decision:** One SQS message per CSV file (not per row).
+
+**Pros:**
+- Simpler architecture
+- Maintains file-level job tracking
+- Efficient for small files
+
+**Cons:**
+- Large files processed in single Lambda invocation
+- Memory constraints for very large files
+
+**Mitigation:** For large files, split into chunks or use Step Functions.
+
+### Error Handling in Processor
+
+**Decision:** Invalid rows are counted but don't fail the job.
+
+**Pros:**
+- Partial success is better than total failure
+- Metrics (errorCount) provide visibility
+
+**Cons:**
+- Users must check errorCount to know if rows were skipped
+
+**Alternative:** Fail job if error rate exceeds threshold.
+
+### File Cleanup
+
+**Decision:** Valid files remain in `uploads/` after processing.
+
+**Pros:**
+- Original data preserved for debugging
+- Reprocessing possible
+
+**Cons:**
+- Storage accumulation over time
+
+**Mitigation:** Add lifecycle policy or delete after successful processing.
+
+## Deployment
+
+### Prerequisites
+
+- AWS CLI configured
+- Terraform installed
+- Python 3.11
+
+### Steps
+
+1. Build Lambda artifacts:
+```bash
+./scripts/build_lambda.sh
+```
+
+2. Initialize Terraform:
+```bash
+cd terraform/environments/dev
+terraform init
+```
+
+3. Deploy:
+```bash
+terraform apply
+```
+
+4. Upload test file:
+```bash
+./scripts/upload_file.sh samples/sample-small.csv
+```
+
+5. Check job status:
+```bash
+curl https://<api-url>/dev/jobs/sample-small
+```
+
+## Testing
+
+### Happy Path
+
+```bash
+# Upload valid CSV
+aws s3 cp samples/sample-small.csv s3://<bucket>/uploads/
+
+# Check job status (wait a few seconds)
+curl https://<api-url>/dev/jobs/sample-small
+# Expected: status = COMPLETED, errorCount = 0
+
+# Verify JSON output
+aws s3 cp s3://<bucket>/processed/sample-small/output.json -
+```
+
+### Validation Failure
+
+```bash
+# Upload malformed CSV
+aws s3 cp samples/sample-malformed.csv s3://<bucket>/uploads/
+
+# Check job status
+curl https://<api-url>/dev/jobs/sample-malformed
+# Expected: status = FAILED
+
+# Verify file moved to rejected
+aws s3 ls s3://<bucket>/rejected/sample-malformed/
+```
+
+### API 404
+
+```bash
+curl https://<api-url>/dev/jobs/nonexistent
+# Expected: 404, {"error": "Job not found", "jobId": "nonexistent"}
+```
+
+## Future Improvements
+
+- Add X-Ray tracing for distributed debugging
+- Implement idempotency using DynamoDB conditional writes
+- Add Step Functions for complex orchestration
+- Enable KMS encryption for S3 and SQS
+- Create CloudWatch Dashboard for operational visibility
+- Add CI/CD pipeline with GitHub Actions

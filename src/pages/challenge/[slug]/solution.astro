@@ -8,9 +8,8 @@ import type {
     ChallengeHeadings,
 } from "@/lib/types";
 import ChallengeLayout from "@/layouts/ChallengeLayout.astro";
-import { Button } from "@/components/ui/button";
-import { Icon } from "astro-icon/components";
 import ComingSoon from "@/components/challenge/solution/ComingSoon.astro";
+import MdxImage from "@/components/media/MdxImage.astro";
 
 export async function getStaticPaths() {
     const challenges = await getCollection("challenges");
@@ -36,23 +35,8 @@ export async function getStaticPaths() {
 }
 
 const { challenge, solution } = Astro.props as SolutionDetailPageProps;
-const { data: challengeData } = challenge;
-
-const title = challengeData.title ?? challenge.id;
-const levelLabel = challengeData.level
-    ? `${challengeData.level[0].toUpperCase()}${challengeData.level.slice(1)}`
-    : null;
-const summaryText = challengeData.summary?.trim();
-const providers = challengeData.providers ?? [];
-const services = challengeData.services ?? [];
-const tags = challengeData.tags ?? [];
-
-const seoDescription = solution
-    ? `Solution for ${title} challenge`
-    : `Solution coming soon for ${title}`;
 
 const challengeUrl = `/challenge/${challenge.id}`;
-const solutionUrl = `/challenge/${challenge.id}/solution`;
 
 // Solution content if available
 let SolutionContent = null;
@@ -62,12 +46,16 @@ if (solution) {
     SolutionContent = rendered.Content;
     headings = rendered.headings ?? [];
 }
+
+const components = {
+    img: MdxImage,
+};
 ---
 
 <ChallengeLayout entry={challenge} activeTab="solution" headings={headings}>
     {
         solution && SolutionContent ? (
-            <SolutionContent />
+            <SolutionContent components={components} />
         ) : (
             <ComingSoon challengeUrl={challengeUrl} />
         )

@@ -3,6 +3,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import TableOfContents from "@/components/core/TableOfContents.astro";
+import ScrollToTop from "@/components/core/ScrollToTop";
 import {
     Breadcrumb,
     BreadcrumbList,
@@ -36,17 +37,27 @@ const seoDescription =
     summaryText ??
     `Take a ${data.level ?? "cloud"} challenge and sharpen your skills.`;
 
+// OG image from cover field
+const ogImage = data.cover;
+const ogImageAlt = data.coverAlt ?? `${title} architecture diagram`;
+
 const challengeUrl = `/challenge/${entry.id}`;
 const solutionUrl = `/challenge/${entry.id}/solution`;
 ---
 
-<BaseLayout title={title} description={seoDescription} contentType="article">
+<BaseLayout
+    title={title}
+    description={seoDescription}
+    image={ogImage}
+    imageAlt={ogImageAlt}
+    contentType="article"
+>
     <div class="mx-auto w-full max-w-6xl">
         <article class="w-full max-w-6xl">
             <!-- Header -->
             <header class="mb-8 space-y-4">
                 <!-- Breadcrumb -->
-                <Breadcrumb class="mb-2">
+                <Breadcrumb className="mb-2">
                     <BreadcrumbList>
                         <BreadcrumbItem>
                             <BreadcrumbLink href="/challenge"
@@ -156,15 +167,22 @@ const solutionUrl = `/challenge/${entry.id}/solution`;
 
             <!-- Content -->
             <div class="flex flex-col lg:flex-row gap-4 w-full max-w-6xl">
-                <div class="w-3/4">
+                <div class:list={["w-full", headings.length > 0 && "lg:w-3/4"]}>
                     <div class="prose prose-neutral dark:prose-invert">
                         <slot />
                     </div>
                 </div>
-                <div class="w-1/4">
-                    <TableOfContents headings={headings} />
-                </div>
+                {
+                    headings.length > 0 && (
+                        <div class="w-full lg:w-1/4">
+                            <TableOfContents headings={headings} />
+                        </div>
+                    )
+                }
             </div>
         </article>
     </div>
+
+    <!-- Floating scroll to top button -->
+    <ScrollToTop client:idle />
 </BaseLayout>
