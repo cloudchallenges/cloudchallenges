@@ -37,11 +37,21 @@ const seoDescription =
     summaryText ??
     `Take a ${data.level ?? "cloud"} challenge and sharpen your skills.`;
 
+// OG image from cover field
+const ogImage = data.cover;
+const ogImageAlt = data.coverAlt ?? `${title} architecture diagram`;
+
 const challengeUrl = `/challenge/${entry.id}`;
 const solutionUrl = `/challenge/${entry.id}/solution`;
 ---
 
-<BaseLayout title={title} description={seoDescription} contentType="article">
+<BaseLayout
+    title={title}
+    description={seoDescription}
+    image={ogImage}
+    imageAlt={ogImageAlt}
+    contentType="article"
+>
     <div class="mx-auto w-full max-w-6xl">
         <article class="w-full max-w-6xl">
             <!-- Header -->
