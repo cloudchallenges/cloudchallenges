@@ -3,6 +3,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import TableOfContents from "@/components/core/TableOfContents.astro";
+import ScrollToTop from "@/components/core/ScrollToTop";
 import {
     Breadcrumb,
     BreadcrumbList,
@@ -171,4 +172,7 @@ const solutionUrl = `/challenge/${entry.id}/solution`;
             </div>
         </article>
     </div>
+
+    <!-- Floating scroll to top button -->
+    <ScrollToTop client:idle />
 </BaseLayout>
