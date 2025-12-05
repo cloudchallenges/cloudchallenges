@@ -8,14 +8,14 @@ A collection of real-world cloud scenarios that help you learn by solving practi
 
 Cloud Challenges provides practical problem statements designed to build real cloud skills. Each challenge includes:
 
-- **Clear scenario** — Real-world context and requirements
-- **Architecture guidance** — Visual diagrams and component breakdowns
-- **Starter code** — Boilerplate to get you started quickly
-- **Solution walkthroughs** — Detailed explanations when you need help
+- **Clear scenario** - Real-world context and requirements
+- **Architecture guidance** - Visual diagrams and component breakdowns
+- **Starter code** - Boilerplate to get you started quickly
+- **Solution walkthroughs** - Detailed explanations when you need help
 
 ## Why?
 
-Most cloud tutorials walk you through step-by-step. Cloud Challenges takes a different approach — you're given a problem to solve, not a script to follow. This builds the problem-solving skills that matter in real projects.
+Most cloud tutorials walk you through step-by-step. Cloud Challenges takes a different approach - you're given a problem to solve, not a script to follow. This builds the problem-solving skills that matter in real projects.
 
 ## Getting Started
 
@@ -29,10 +29,10 @@ Most cloud tutorials walk you through step-by-step. Cloud Challenges takes a dif
 
 This website is built with:
 
-- [Astro](https://astro.build/) — Static site generator
-- [React](https://react.dev/) — Interactive components
-- [Tailwind CSS](https://tailwindcss.com/) — Styling
-- [shadcn/ui](https://ui.shadcn.com/) — UI components
+- [Astro](https://astro.build/) - Static site generator
+- [React](https://react.dev/) - Interactive components
+- [Tailwind CSS](https://tailwindcss.com/) - Styling
+- [shadcn/ui](https://ui.shadcn.com/) - UI components
 
 ## Development
 
@@ -55,8 +55,8 @@ Contributions are welcome! Whether it's adding new challenges, improving existin
 
 This project is licensed under the [MIT License](./LICENSE).
 
----
+## Support
 
-<p align="center">
-  Made with ❤️ by <a href="https://github.com/HYP3R00T">Rajesh</a>
-</p>
+If you find this helpful, consider supporting my work ❤️
+
+[![Sponsor on GitHub](https://img.shields.io/badge/Sponsor-GitHub-ea4aaa?style=for-the-badge\&logo=github)](https://github.com/sponsors/HYP3R00T)
