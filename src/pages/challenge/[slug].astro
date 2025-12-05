@@ -6,7 +6,7 @@ import type {
     ChallengeDetailPageProps,
 } from "@/lib/types";
 import ChallengeLayout from "@/layouts/ChallengeLayout.astro";
-import MdxImage from "@/components/media/MdxImage.astro";
+import { MdxImage, MdxLink } from "@/components/mdx";
 
 export async function getStaticPaths() {
     const entries = await getCollection("challenges");
@@ -23,6 +23,7 @@ const { Content, headings = [] } = await render(challenge);
 
 const components = {
     img: MdxImage,
+    a: MdxLink,
 };
 ---
 
