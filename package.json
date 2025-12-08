@@ -34,7 +34,7 @@
         "react": "^19.2.0",
         "react-dom": "^19.2.0",
         "sharp": "^0.34.4",
-        "shiki": "^3.14.0",
+        "shiki": "^3.19.0",
         "tailwind-merge": "^3.4.0",
         "tailwindcss": "^4.1.16",
         "typescript": "^5.9.3"
