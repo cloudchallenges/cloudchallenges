@@ -24,7 +24,7 @@
         "@radix-ui/react-toggle": "^1.1.10",
         "@radix-ui/react-visually-hidden": "^1.2.4",
         "@tailwindcss/vite": "^4.1.16",
-        "astro": "^5.15.2",
+        "astro": "^5.18.1",
         "astro-auto-import": "^0.4.5",
         "astro-icon": "^1.1.5",
         "class-variance-authority": "^0.7.1",
